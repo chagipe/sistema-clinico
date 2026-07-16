@@ -87,13 +87,16 @@ export default function DashboardPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newPatient),
       });
+      const data = await response.json();
       if (response.ok) {
         setIsDialogOpen(false);
         setNewPatient({ dni: "", firstName: "", lastName: "", birthDate: "", gender: "", phone: "" });
         fetchPatients();
+      } else {
+        alert("Error: " + (data.error || JSON.stringify(data)));
       }
-    } catch (error) {
-      console.error("Error creating patient:", error);
+    } catch (error: any) {
+      alert("Error de conexion: " + error.message);
     }
   };
 
