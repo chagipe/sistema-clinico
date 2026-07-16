@@ -111,6 +111,7 @@ body {
   background: linear-gradient(145deg, #9e7e6a, #7a6050);
   color: white;
   border-radius: 12px;
+  cursor: pointer;
   box-shadow:
     4px 4px 8px #c9b9a8,
     -4px -4px 8px #ffffff;

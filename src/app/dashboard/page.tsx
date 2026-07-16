@@ -4,13 +4,6 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -33,6 +26,7 @@ import {
   ChevronRight,
   Timer,
   CheckCircle2,
+  X,
 } from "lucide-react";
 import { getGreeting, calculateAge, cn } from "@/lib/utils";
 
@@ -124,98 +118,111 @@ export default function DashboardPage() {
         title={`${getGreeting()}, Dr. Admin`}
         subtitle="Panel de control y gestion de consultas"
         actions={
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <button className="clay-button-primary flex items-center gap-2 px-4 py-2.5 text-sm font-semibold">
-                <Plus className="h-4 w-4" />
-                Nueva Atencion
-              </button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px] clay-card border-0">
-              <DialogHeader>
-                <DialogTitle className="text-lg font-bold text-[#3d3530]">Nueva Atencion</DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleCreatePatient} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-[#3d3530]">DNI</Label>
-                    <Input
-                      value={newPatient.dni}
-                      onChange={(e) => setNewPatient({ ...newPatient, dni: e.target.value })}
-                      placeholder="Numero de documento"
-                      className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-[#3d3530]">Genero</Label>
-                    <Select onValueChange={(value) => setNewPatient({ ...newPatient, gender: value })}>
-                      <SelectTrigger className="clay-input h-11 text-[#3d3530]">
-                        <SelectValue placeholder="Seleccionar" />
-                      </SelectTrigger>
-                      <SelectContent className="clay-card border-0">
-                        <SelectItem value="Masculino">Masculino</SelectItem>
-                        <SelectItem value="Femenino">Femenino</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-[#3d3530]">Nombres</Label>
-                    <Input
-                      value={newPatient.firstName}
-                      onChange={(e) => setNewPatient({ ...newPatient, firstName: e.target.value })}
-                      placeholder="Nombres completos"
-                      className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-[#3d3530]">Apellidos</Label>
-                    <Input
-                      value={newPatient.lastName}
-                      onChange={(e) => setNewPatient({ ...newPatient, lastName: e.target.value })}
-                      placeholder="Apellidos completos"
-                      className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-[#3d3530]">Fecha de Nacimiento</Label>
-                    <Input
-                      type="date"
-                      value={newPatient.birthDate}
-                      onChange={(e) => setNewPatient({ ...newPatient, birthDate: e.target.value })}
-                      className="clay-input h-11 text-[#3d3530]"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-[#3d3530]">Telefono</Label>
-                    <Input
-                      value={newPatient.phone}
-                      onChange={(e) => setNewPatient({ ...newPatient, phone: e.target.value })}
-                      placeholder="(01) 234-5678"
-                      className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-end gap-3 pt-2">
-                  <button type="button" className="clay-button px-4 py-2.5 text-sm font-semibold text-[#3d3530]" onClick={() => setIsDialogOpen(false)}>
-                    Cancelar
-                  </button>
-                  <button type="submit" className="clay-button-primary px-4 py-2.5 text-sm font-semibold">
-                    Crear Paciente
-                  </button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <button
+            className="clay-button-primary flex items-center gap-2 px-4 py-2.5 text-sm font-semibold"
+            onClick={() => setIsDialogOpen(true)}
+          >
+            <Plus className="h-4 w-4" />
+            Nueva Atencion
+          </button>
         }
       />
+
+      {/* Inline Modal */}
+      {isDialogOpen && (
+        <div className="fixed inset-0 flex items-center justify-center p-4" style={{ zIndex: 9999 }}>
+          <div className="absolute inset-0 bg-black/40" onClick={() => setIsDialogOpen(false)} />
+          <div className="relative w-full max-w-[500px] clay-card p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg font-bold text-[#3d3530]">Nueva Atencion</h2>
+              <button
+                type="button"
+                onClick={() => setIsDialogOpen(false)}
+                className="h-8 w-8 flex items-center justify-center rounded-xl hover:bg-black/5 transition-colors"
+              >
+                <X className="h-4 w-4 text-[#7a6b5d]" />
+              </button>
+            </div>
+            <form onSubmit={handleCreatePatient} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold text-[#3d3530]">DNI</Label>
+                  <Input
+                    value={newPatient.dni}
+                    onChange={(e) => setNewPatient({ ...newPatient, dni: e.target.value })}
+                    placeholder="Numero de documento"
+                    className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold text-[#3d3530]">Genero</Label>
+                  <Select onValueChange={(value) => setNewPatient({ ...newPatient, gender: value })}>
+                    <SelectTrigger className="clay-input h-11 text-[#3d3530]">
+                      <SelectValue placeholder="Seleccionar" />
+                    </SelectTrigger>
+                    <SelectContent className="clay-card border-0">
+                      <SelectItem value="Masculino">Masculino</SelectItem>
+                      <SelectItem value="Femenino">Femenino</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold text-[#3d3530]">Nombres</Label>
+                  <Input
+                    value={newPatient.firstName}
+                    onChange={(e) => setNewPatient({ ...newPatient, firstName: e.target.value })}
+                    placeholder="Nombres completos"
+                    className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold text-[#3d3530]">Apellidos</Label>
+                  <Input
+                    value={newPatient.lastName}
+                    onChange={(e) => setNewPatient({ ...newPatient, lastName: e.target.value })}
+                    placeholder="Apellidos completos"
+                    className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
+                    required
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold text-[#3d3530]">Fecha de Nacimiento</Label>
+                  <Input
+                    type="date"
+                    value={newPatient.birthDate}
+                    onChange={(e) => setNewPatient({ ...newPatient, birthDate: e.target.value })}
+                    className="clay-input h-11 text-[#3d3530]"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold text-[#3d3530]">Telefono</Label>
+                  <Input
+                    value={newPatient.phone}
+                    onChange={(e) => setNewPatient({ ...newPatient, phone: e.target.value })}
+                    placeholder="(01) 234-5678"
+                    className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end gap-3 pt-2">
+                <button type="button" className="clay-button px-4 py-2.5 text-sm font-semibold text-[#3d3530]" onClick={() => setIsDialogOpen(false)}>
+                  Cancelar
+                </button>
+                <button type="submit" className="clay-button-primary px-4 py-2.5 text-sm font-semibold">
+                  Crear Paciente
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <div className="flex-1 p-6 space-y-6 overflow-y-auto">
         {/* Stats Grid */}
