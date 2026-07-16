@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ConsultationType {
+  NUEVA
+  RECONSULTA
+  TRATAMIENTO
+}
+
+enum ConsultationStatus {
+  EN_ESPERA
+  EN_ATENCION
+  FINALIZADO
+}
+
+enum DiagnosisType {
+  PRESUNTIVO
+  DEFINITIVO
+}
+
+model Patient {
+  id          String   @id @default(uuid()) @db.Uuid
+  dni         String   @unique @db.VarChar(20)
+  firstName   String   @map("first_name") @db.VarChar(100)
+  lastName    String   @map("last_name") @db.VarChar(100)
+  birthDate   DateTime @map("birth_date") @db.Date
+  gender      String   @db.VarChar(20)
+  phone       String?  @db.VarChar(20)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  consultations Consultation[]
+
+  @@map("patients")
+}
+
+model Consultation {
+  id                       String           @id @default(uuid()) @db.Uuid
+  patientId                String           @map("patient_id") @db.Uuid
+  doctorId                 String?          @map("doctor_id") @db.Uuid
+  type                     ConsultationType
+  status                   ConsultationStatus @default(EN_ESPERA)
+  hasAccidentsOps          Boolean          @default(false) @map("has_accidents_ops")
+  consultationReason       String?          @map("consultation_reason") @db.Text
+  diseaseHistory           String?          @map("disease_history") @db.Text
+  allergies                String?          @db.Text
+  physicalExam             String?          @map("physical_exam") @db.Text
+  labExamsRequested        String?          @map("lab_exams_requested") @db.Text
+  treatmentDurationApprox  String?          @map("treatment_duration_approx") @db.VarChar(200)
+  improvementEstimate      String?          @map("improvement_estimate") @db.VarChar(200)
+  doctorComments           String?          @map("doctor_comments") @db.Text
+  createdAt                DateTime         @default(now()) @map("created_at")
+
+  patient               Patient                @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  vitals                Vitals[]
+  diagnoses             Diagnosis[]
+  alternativeTreatments AlternativeTreatment[]
+  prescriptions         Prescription[]
+  recommendationsChecklist RecommendationsChecklist?
+
+  @@map("consultations")
+}
+
+model Vitals {
+  id              String   @id @default(uuid()) @db.Uuid
+  consultationId  String   @map("consultation_id") @db.Uuid
+  bloodPressure   String?  @map("blood_pressure") @db.VarChar(10)
+  heartRate       Int?     @map("heart_rate")
+  respiratoryRate Int?     @map("respiratory_rate")
+  oxygenSaturation Int?    @map("oxygen_saturation")
+  weightKg        Decimal? @map("weight_kg") @db.Decimal(5, 2)
+  heightCm        Decimal? @map("height_cm") @db.Decimal(5, 2)
+  bmi             Decimal? @db.Decimal(5, 2)
+  temperature     Decimal? @db.Decimal(4, 1)
+
+  consultation Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+
+  @@unique([consultationId])
+  @@map("vitals")
+}
+
+model Diagnosis {
+  id              String        @id @default(uuid()) @db.Uuid
+  consultationId  String        @map("consultation_id") @db.Uuid
+  cie10Code       String        @map("cie10_code") @db.VarChar(10)
+  description     String        @db.VarChar(500)
+  type            DiagnosisType
+
+  consultation Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+
+  @@map("diagnoses")
+}
+
+model AlternativeTreatment {
+  id              String   @id @default(uuid()) @db.Uuid
+  consultationId  String   @map("consultation_id") @db.Uuid
+  treatmentName   String   @map("treatment_name") @db.VarChar(100)
+  bodyZone        String?  @map("body_zone") @db.VarChar(100)
+  frequency       String?  @db.VarChar(50)
+  sessionsCount   Int?     @map("sessions_count")
+  packagePrice    Decimal? @map("package_price") @db.Decimal(10, 2)
+  sessionPrice    Decimal? @map("session_price") @db.Decimal(10, 2)
+
+  consultation Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+
+  @@map("alternative_treatments")
+}
+
+model Prescription {
+  id              String   @id @default(uuid()) @db.Uuid
+  consultationId  String   @map("consultation_id") @db.Uuid
+  medication      String   @db.VarChar(200)
+  days            Int?
+  dosage          String?  @db.VarChar(100)
+  instructions    String?  @db.Text
+
+  consultation Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+
+  @@map("prescriptions")
+}
+
+model RecommendationsChecklist {
+  id                    String   @id @default(uuid()) @db.Uuid
+  consultationId        String   @unique @map("consultation_id") @db.Uuid
+  noCitrus              Boolean  @default(false) @map("no_citrus")
+  noVitaminC            Boolean  @default(false) @map("no_vitamin_c")
+  noPhysicalEffort      Boolean  @default(false) @map("no_physical_effort")
+  noAlcohol             Boolean  @default(false) @map("no_alcohol")
+  noAvocado             Boolean  @default(false) @map("no_avocado")
+  noRedMeat             Boolean  @default(false) @map("no_red_meat")
+  useOrthopedicSupport  Boolean  @default(false) @map("use_orthopedic_support")
+
+  consultation Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+
+  @@map("recommendations_checklist")
+}
+
+model Cie10Code {
+  id          String @id @default(uuid()) @db.Uuid
+  code        String @unique @db.VarChar(10)
+  description String @db.VarChar(500)
+  category    String? @db.VarChar(200)
+
+  @@map("cie10_codes")
+}
