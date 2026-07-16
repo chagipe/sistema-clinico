@@ -194,6 +194,17 @@ body {
     0 0 0 2px #b89a80;
 }
 
+dialog {
+  padding: 0;
+  border: none;
+  max-width: 500px;
+  width: calc(100% - 2rem);
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
 @media print {
   body { background: white !important; }
   .print\:hidden { display: none !important; }
