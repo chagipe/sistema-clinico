@@ -13,6 +13,8 @@ import {
   HeartPulse,
   Stethoscope,
   Activity,
+  ClipboardCheck,
+  ShieldCheck,
 } from "lucide-react";
 
 const navigation = [
@@ -23,6 +25,13 @@ const navigation = [
       { name: "Pacientes", href: "/pacientes", icon: Users },
       { name: "Consultas", href: "/consultas", icon: Stethoscope },
       { name: "Historias", href: "/historias", icon: FileText },
+    ],
+  },
+  {
+    name: "Clinica",
+    items: [
+      { name: "Control Sesiones", href: "/sesiones", icon: ClipboardCheck },
+      { name: "Consentimiento", href: "/consentimiento", icon: ShieldCheck },
     ],
   },
   {
@@ -45,9 +54,9 @@ export function Sidebar() {
           <HeartPulse className="h-5 w-5 text-white" />
         </div>
         <div>
-          <h1 className="text-sm font-bold tracking-tight text-white">MedIntegra</h1>
+          <h1 className="text-sm font-bold tracking-tight text-white">Ejes Terapeuticos</h1>
           <p className="text-[10px] text-slate-400 uppercase tracking-widest">
-            Clinica Integral
+            Terapia del Dolor
           </p>
         </div>
       </div>
@@ -91,7 +100,7 @@ export function Sidebar() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-white truncate">Dr. Admin</p>
-            <p className="text-[11px] text-slate-400 truncate">Medicina Integrativa</p>
+            <p className="text-[11px] text-slate-400 truncate">Terapia del Dolor</p>
           </div>
           <button className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors">
             <LogOut className="h-4 w-4" />

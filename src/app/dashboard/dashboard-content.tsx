@@ -116,7 +116,7 @@ export default function DashboardContent() {
     <div className="flex flex-col h-full">
       <TopBar
         title={`${getGreeting()}, Dr. Admin`}
-        subtitle="Panel de control y gestion de consultas"
+        subtitle="Ejes Terapeuticos - Panel de control"
         actions={
           <button
             className="clay-button-primary flex items-center gap-2 px-4 py-2.5 text-sm font-semibold"

@@ -34,7 +34,8 @@ model Patient {
   phone       String?  @db.VarChar(20)
   createdAt   DateTime @default(now()) @map("created_at")
 
-  consultations Consultation[]
+  consultations    Consultation[]
+  treatmentPackages TreatmentPackage[]
 
   @@map("patients")
 }
@@ -63,6 +64,7 @@ model Consultation {
   prescriptions         Prescription[]
   recommendationsChecklist RecommendationsChecklist?
   media                 Media[]
+  treatmentPackages     TreatmentPackage[]
 
   @@map("consultations")
 }
@@ -134,7 +136,12 @@ model RecommendationsChecklist {
   noAlcohol             Boolean  @default(false) @map("no_alcohol")
   noAvocado             Boolean  @default(false) @map("no_avocado")
   noRedMeat             Boolean  @default(false) @map("no_red_meat")
-  useOrthopedicSupport  Boolean  @default(false) @map("use_orthopedic_support")
+  cryotherapy           Boolean  @default(false) @map("cryotherapy")
+  thermotherapy         Boolean  @default(false) @map("thermotherapy")
+  stretchingExercises   Boolean  @default(false) @map("stretching_exercises")
+  useFajaDorsoLumbar    Boolean  @default(false) @map("use_faja_dorso_lumbar")
+  useRodillera          Boolean  @default(false) @map("use_rodillera")
+  useOrthopedicInsoles  Boolean  @default(false) @map("use_orthopedic_insoles")
 
   consultation Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
 
@@ -162,4 +169,38 @@ model Media {
   consultation Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
 
   @@map("media")
+}
+
+model TreatmentPackage {
+  id              String    @id @default(uuid()) @db.Uuid
+  patientId       String    @map("patient_id") @db.Uuid
+  consultationId  String?   @map("consultation_id") @db.Uuid
+  treatmentName   String    @map("treatment_name") @db.VarChar(100)
+  bodyZone        String?   @map("body_zone") @db.VarChar(100)
+  totalSessions   Int       @map("total_sessions")
+  packagePrice    Decimal?  @map("package_price") @db.Decimal(10, 2)
+  sessionPrice    Decimal?  @map("session_price") @db.Decimal(10, 2)
+  status          String    @default("ACTIVO") @db.VarChar(20)
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  patient      Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  consultation Consultation? @relation(fields: [consultationId], references: [id], onDelete: SetNull)
+  sessions     SessionRecord[]
+
+  @@map("treatment_packages")
+}
+
+model SessionRecord {
+  id              String   @id @default(uuid()) @db.Uuid
+  packageId       String   @map("package_id") @db.Uuid
+  sessionNumber   Int      @map("session_number")
+  treatedZone     String?  @map("treated_zone") @db.VarChar(100)
+  sessionDate     DateTime @map("session_date")
+  sessionTime     String?  @map("session_time") @db.VarChar(10)
+  notes           String?  @db.Text
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  package TreatmentPackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@map("session_records")
 }

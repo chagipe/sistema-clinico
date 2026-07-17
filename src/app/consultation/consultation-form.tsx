@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -92,7 +91,12 @@ const consultationSchema = z.object({
     noAlcohol: z.boolean().optional(),
     noAvocado: z.boolean().optional(),
     noRedMeat: z.boolean().optional(),
-    useOrthopedicSupport: z.boolean().optional(),
+    cryotherapy: z.boolean().optional(),
+    thermotherapy: z.boolean().optional(),
+    stretchingExercises: z.boolean().optional(),
+    useFajaDorsoLumbar: z.boolean().optional(),
+    useRodillera: z.boolean().optional(),
+    useOrthopedicInsoles: z.boolean().optional(),
   }).optional(),
 });
 
@@ -180,7 +184,9 @@ export default function ConsultationForm() {
       prescriptions: [],
       recommendationsChecklist: {
         noCitrus: false, noVitaminC: false, noPhysicalEffort: false,
-        noAlcohol: false, noAvocado: false, noRedMeat: false, useOrthopedicSupport: false,
+        noAlcohol: false, noAvocado: false, noRedMeat: false,
+        cryotherapy: false, thermotherapy: false, stretchingExercises: false,
+        useFajaDorsoLumbar: false, useRodillera: false, useOrthopedicInsoles: false,
       },
     },
   });

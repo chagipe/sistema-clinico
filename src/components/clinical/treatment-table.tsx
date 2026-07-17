@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { UseFormReturn, useFieldArray } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Zap } from "lucide-react";
 
 interface TreatmentTableProps {
   form: UseFormReturn<any>;
@@ -14,29 +13,41 @@ interface TreatmentTableProps {
 
 const TREATMENT_OPTIONS = [
   { value: "Ozonoterapia", label: "Ozonoterapia" },
-  { value: "Plasma Rico en Plaquetas", label: "Plasma Rico en Plaquetas" },
+  { value: "Plasma Rico en Plaquetas (PRP)", label: "Plasma Rico en Plaquetas (PRP)" },
   { value: "Viscosuplementacion", label: "Viscosuplementacion" },
+  { value: "Fisioterapia / Rehabilitacion", label: "Fisioterapia / Rehabilitacion" },
+  { value: "Magnetoterapia", label: "Magnetoterapia" },
+  { value: "Electroterapia", label: "Electroterapia" },
+  { value: "Sesion de Terapia del Dolor", label: "Sesion de Terapia del Dolor" },
   { value: "Infiltracion", label: "Infiltracion" },
   { value: "Acupuntura", label: "Acupuntura" },
-  { value: "Fisioterapia", label: "Fisioterapia" },
 ];
 
-const BODY_ZONE_OPTIONS = [
-  { value: "Rodilla Izquierda", label: "Rodilla Izquierda" },
-  { value: "Rodilla Derecha", label: "Rodilla Derecha" },
-  { value: "Columna Cervical", label: "Columna Cervical" },
-  { value: "Columna Lumbar", label: "Columna Lumbar" },
-  { value: "Columna Dorsal", label: "Columna Dorsal" },
-  { value: "Hombro Izquierdo", label: "Hombro Izquierdo" },
-  { value: "Hombro Derecho", label: "Hombro Derecho" },
-  { value: "Codo Izquierdo", label: "Codo Izquierdo" },
-  { value: "Codo Derecho", label: "Codo Derecho" },
-  { value: "Tobillo Izquierdo", label: "Tobillo Izquierdo" },
-  { value: "Tobillo Derecho", label: "Tobillo Derecho" },
-  { value: "Muñeca Izquierda", label: "Muñeca Izquierda" },
-  { value: "Muñeca Derecha", label: "Muñeca Derecha" },
-  { value: "Cadera", label: "Cadera" },
-];
+const QUICK_TEMPLATES: Record<string, { zone: string; label: string }[]> = {
+  "Ozonoterapia": [
+    { zone: "Rodilla Izquierda", label: "Rod. Izq." },
+    { zone: "Rodilla Derecha", label: "Rod. Der." },
+    { zone: "Columna Lumbar", label: "Col. Lumbar" },
+    { zone: "Columna Cervical", label: "Col. Cervical" },
+    { zone: "Cadera Izquierda", label: "Cadera Izq." },
+    { zone: "Cadera Derecha", label: "Cadera Der." },
+    { zone: "Hombro Izquierdo", label: "Hombro Izq." },
+    { zone: "Hombro Derecho", label: "Hombro Der." },
+  ],
+  "Plasma Rico en Plaquetas (PRP)": [
+    { zone: "Rodilla Izquierda", label: "Rod. Izq." },
+    { zone: "Rodilla Derecha", label: "Rod. Der." },
+    { zone: "Columna Lumbar", label: "Col. Lumbar" },
+    { zone: "Columna Cervical", label: "Col. Cervical" },
+    { zone: "Cadera Izquierda", label: "Cadera Izq." },
+    { zone: "Cadera Derecha", label: "Cadera Der." },
+    { zone: "Facial / Estetico", label: "Facial" },
+  ],
+  "Viscosuplementacion": [
+    { zone: "Rodilla Izquierda", label: "Rod. Izq." },
+    { zone: "Rodilla Derecha", label: "Rod. Der." },
+  ],
+};
 
 const FREQUENCY_OPTIONS = [
   { value: "1v-sem", label: "1 vez por semana" },
@@ -53,6 +64,8 @@ export function TreatmentTable({ form }: TreatmentTableProps) {
     name: "alternativeTreatments",
   });
 
+  const [activeQuickTemplates] = useState<Record<number, string>>({});
+
   const calculateTotal = (index: number) => {
     const sessions = form.watch(`alternativeTreatments.${index}.sessionsCount`);
     const sessionPrice = form.watch(`alternativeTreatments.${index}.sessionPrice`);
@@ -62,8 +75,52 @@ export function TreatmentTable({ form }: TreatmentTableProps) {
     return "0.00";
   };
 
+  const handleQuickAdd = (treatmentName: string, bodyZone: string) => {
+    append({
+      treatmentName,
+      bodyZone,
+      frequency: "1v-sem",
+      sessionsCount: 10,
+      sessionPrice: 0,
+      packagePrice: 0,
+    });
+  };
+
+  const getAvailableQuickTemplates = (index: number) => {
+    const treatmentName = form.watch(`alternativeTreatments.${index}.treatmentName`);
+    return QUICK_TEMPLATES[treatmentName] || [];
+  };
+
   return (
     <div className="space-y-4">
+      {/* Quick Add Section */}
+      <div className="clay-inset p-4 space-y-3">
+        <div className="flex items-center gap-2">
+          <Zap className="h-4 w-4 text-amber-500" />
+          <h4 className="text-sm font-bold text-slate-900">Agregar Rapido</h4>
+        </div>
+        <div className="space-y-3">
+          {Object.entries(QUICK_TEMPLATES).map(([treatment, zones]) => (
+            <div key={treatment}>
+              <p className="text-xs font-semibold text-slate-500 mb-2">{treatment}</p>
+              <div className="flex flex-wrap gap-2">
+                {zones.map((zone) => (
+                  <button
+                    key={zone.zone}
+                    type="button"
+                    onClick={() => handleQuickAdd(treatment, zone.zone)}
+                    className="clay-button px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-cyan-600 hover:border-cyan-300 transition-colors"
+                  >
+                    {zone.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Treatment Rows */}
       {fields.map((field, index) => (
         <div key={field.id} className="clay-inset p-4 space-y-4">
           <div className="flex items-center justify-between">
@@ -97,7 +154,27 @@ export function TreatmentTable({ form }: TreatmentTableProps) {
                   <SelectValue placeholder="Seleccionar zona" />
                 </SelectTrigger>
                 <SelectContent className="clay-card border-0">
-                  {BODY_ZONE_OPTIONS.map((o) => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
+                  {getAvailableQuickTemplates(index).length > 0
+                    ? getAvailableQuickTemplates(index).map((z) => <SelectItem key={z.zone} value={z.zone}>{z.label} - {z.zone}</SelectItem>)
+                    : [
+                        { value: "Rodilla Izquierda", label: "Rodilla Izquierda" },
+                        { value: "Rodilla Derecha", label: "Rodilla Derecha" },
+                        { value: "Columna Cervical", label: "Columna Cervical" },
+                        { value: "Columna Lumbar", label: "Columna Lumbar" },
+                        { value: "Columna Dorsal", label: "Columna Dorsal" },
+                        { value: "Hombro Izquierdo", label: "Hombro Izquierdo" },
+                        { value: "Hombro Derecho", label: "Hombro Derecho" },
+                        { value: "Codo Izquierdo", label: "Codo Izquierdo" },
+                        { value: "Codo Derecho", label: "Codo Derecho" },
+                        { value: "Tobillo Izquierdo", label: "Tobillo Izquierdo" },
+                        { value: "Tobillo Derecho", label: "Tobillo Derecho" },
+                        { value: "Muneca Izquierda", label: "Muneca Izquierda" },
+                        { value: "Muneca Derecha", label: "Muneca Derecha" },
+                        { value: "Cadera Izquierda", label: "Cadera Izquierda" },
+                        { value: "Cadera Derecha", label: "Cadera Derecha" },
+                        { value: "Facial / Estetico", label: "Facial / Estetico" },
+                      ].map((o) => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)
+                  }
                 </SelectContent>
               </Select>
             </div>

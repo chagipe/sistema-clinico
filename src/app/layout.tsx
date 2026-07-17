@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MedIntegra - Sistema Clinico",
-  description: "Sistema de gestion de consultas medicas e historias clinicas - Medicina Integrativa",
+  title: "Ejes Terapeuticos - Sistema Clinico",
+  description: "Doctores en Terapia del Dolor - Sistema de gestion clinica",
 };
 
 export default function RootLayout({

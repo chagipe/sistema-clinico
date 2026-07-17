@@ -21,10 +21,9 @@ export default function ConfiguracionPage() {
       icon: Building2,
       iconBg: "bg-cyan-500",
       fields: [
-        { label: "Nombre del Consultorio", value: "MedIntegra - Clinica Integral" },
-        { label: "RUC", value: "20512345678" },
-        { label: "Telefono", value: "(01) 234-5678" },
-        { label: "Direccion", value: "Av. Principal 123, Lima" },
+        { label: "Nombre de la Clinica", value: "Ejes Terapeuticos - Doctores en Terapia del Dolor" },
+        { label: "Telefono / WhatsApp", value: "960 937 796" },
+        { label: "Direccion", value: "Av. Espana 663, Cercado de Lima (A una cuadra antes de Migraciones)" },
       ],
     },
     {
@@ -35,8 +34,8 @@ export default function ConfiguracionPage() {
       fields: [
         { label: "Nombre", value: "Dr. Admin" },
         { label: "CMP", value: "12345" },
-        { label: "Especialidad", value: "Medicina Integrativa" },
-        { label: "Sub especialidades", value: "Ozonoterapia, PRP, Viscosuplementacion" },
+        { label: "Especialidad", value: "Terapia del Dolor y Medicina Regenerativa" },
+        { label: "Sub especialidades", value: "Ozonoterapia, PRP, Viscosuplementacion, Fisioterapia" },
       ],
     },
     {

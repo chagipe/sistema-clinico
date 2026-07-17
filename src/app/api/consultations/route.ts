@@ -66,7 +66,12 @@ const consultationSchema = z.object({
       noAlcohol: z.boolean().optional(),
       noAvocado: z.boolean().optional(),
       noRedMeat: z.boolean().optional(),
-      useOrthopedicSupport: z.boolean().optional(),
+      cryotherapy: z.boolean().optional(),
+      thermotherapy: z.boolean().optional(),
+      stretchingExercises: z.boolean().optional(),
+      useFajaDorsoLumbar: z.boolean().optional(),
+      useRodillera: z.boolean().optional(),
+      useOrthopedicInsoles: z.boolean().optional(),
     })
     .optional(),
 });

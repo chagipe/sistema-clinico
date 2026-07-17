@@ -44,7 +44,9 @@ interface ConsultationData {
   prescriptions: Array<{ medication: string; days?: number; dosage?: string; instructions?: string; }>;
   recommendationsChecklist?: {
     noCitrus: boolean; noVitaminC: boolean; noPhysicalEffort: boolean;
-    noAlcohol: boolean; noAvocado: boolean; noRedMeat: boolean; useOrthopedicSupport: boolean;
+    noAlcohol: boolean; noAvocado: boolean; noRedMeat: boolean;
+    cryotherapy: boolean; thermotherapy: boolean; stretchingExercises: boolean;
+    useFajaDorsoLumbar: boolean; useRodillera: boolean; useOrthopedicInsoles: boolean;
   };
 }
 
@@ -158,9 +160,9 @@ export default function PrintView() {
                   <HeartPulse className="h-8 w-8 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold tracking-tight">CONSULTORIO DE MEDICINA INTEGRATIVA</h1>
-                  <p className="text-sm text-white/60 mt-0.5">Ozonoterapia &middot; Plasma Rico en Plaquetas &middot; Viscosuplementacion</p>
-                  <p className="text-xs text-white/40 mt-0.5">RUC: 20512345678 &middot; Fono: (01) 234-5678</p>
+                  <h1 className="text-xl font-bold tracking-tight">EJES TERAPEUTICOS</h1>
+                  <p className="text-sm text-white/60 mt-0.5">Doctores en Terapia del Dolor</p>
+                  <p className="text-xs text-white/40 mt-0.5">Av. Espana 663, Cercado de Lima &middot; Tel/WhatsApp: 960 937 796</p>
                 </div>
               </div>
               <div className="text-right">
@@ -365,21 +367,78 @@ export default function PrintView() {
                   <div className="h-1.5 w-1.5 rounded-full bg-amber-300" />
                   <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">6. Recomendaciones y Restricciones</h3>
                 </div>
-                <div className="grid grid-cols-2 gap-1.5 text-xs">
-                  {[
-                    { k: "noCitrus", l: "No citricos", a: consultation.recommendationsChecklist.noCitrus },
-                    { k: "noVitaminC", l: "No Vitamina C", a: consultation.recommendationsChecklist.noVitaminC },
-                    { k: "noPhysicalEffort", l: "No esfuerzo fisico", a: consultation.recommendationsChecklist.noPhysicalEffort },
-                    { k: "noAlcohol", l: "No alcohol", a: consultation.recommendationsChecklist.noAlcohol },
-                    { k: "noAvocado", l: "No palta", a: consultation.recommendationsChecklist.noAvocado },
-                    { k: "noRedMeat", l: "No carne roja", a: consultation.recommendationsChecklist.noRedMeat },
-                    { k: "useOrthopedicSupport", l: "Uso de faja/ortopedico", a: consultation.recommendationsChecklist.useOrthopedicSupport },
-                  ].filter(r => r.a).map((r) => (
-                    <div key={r.k} className={`clay-inset px-3 py-2 rounded-xl text-red-700`}>
-                      <span className="font-bold">X</span> {r.l}
+
+                {/* Dietetic Restrictions */}
+                {[
+                  { k: "noCitrus", l: "No citricos (limon, naranja, fresa, pina, mandarina)" },
+                  { k: "noVitaminC", l: "No suplementar Vitamina C" },
+                  { k: "noAvocado", l: "No consumir palta (evitar antioxidantes altos)" },
+                  { k: "noRedMeat", l: "No consumir carnes rojas (res, cerdo, cordero)" },
+                  { k: "noAlcohol", l: "No consumir bebidas alcoholicas" },
+                ].filter(r => consultation.recommendationsChecklist![r.k as keyof typeof consultation.recommendationsChecklist]).length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-[10px] font-bold text-amber-600 uppercase tracking-wider mb-1">Restricciones Dieteticas (Ozonoterapia)</p>
+                    <div className="grid grid-cols-1 gap-1 text-xs">
+                      {[
+                        { k: "noCitrus", l: "No citricos (limon, naranja, fresa, pina, mandarina)" },
+                        { k: "noVitaminC", l: "No suplementar Vitamina C" },
+                        { k: "noAvocado", l: "No consumir palta (evitar antioxidantes altos)" },
+                        { k: "noRedMeat", l: "No consumir carnes rojas (res, cerdo, cordero)" },
+                        { k: "noAlcohol", l: "No consumir bebidas alcoholicas" },
+                      ].filter(r => consultation.recommendationsChecklist![r.k as keyof typeof consultation.recommendationsChecklist]).map((r) => (
+                        <div key={r.k} className="clay-inset px-3 py-2 rounded-xl text-red-700">
+                          <span className="font-bold">X</span> {r.l}
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
+
+                {/* Physical / Rehab */}
+                {[
+                  { k: "noPhysicalEffort", l: "Reposo deportivo / Evitar esfuerzo fisico pesado" },
+                  { k: "cryotherapy", l: "Crioterapia (Hielo local 15 min por sesion)" },
+                  { k: "thermotherapy", l: "Termoterapia (Calor local en zona muscular)" },
+                  { k: "stretchingExercises", l: "Pauta de ejercicios de estiramiento / Pausas activas" },
+                ].filter(r => consultation.recommendationsChecklist![r.k as keyof typeof consultation.recommendationsChecklist]).length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-[10px] font-bold text-cyan-600 uppercase tracking-wider mb-1">Indicaciones Fisicas y Rehabilitacion</p>
+                    <div className="grid grid-cols-1 gap-1 text-xs">
+                      {[
+                        { k: "noPhysicalEffort", l: "Reposo deportivo / Evitar esfuerzo fisico pesado" },
+                        { k: "cryotherapy", l: "Crioterapia (Hielo local 15 min por sesion)" },
+                        { k: "thermotherapy", l: "Termoterapia (Calor local en zona muscular)" },
+                        { k: "stretchingExercises", l: "Pauta de ejercicios de estiramiento / Pausas activas" },
+                      ].filter(r => consultation.recommendationsChecklist![r.k as keyof typeof consultation.recommendationsChecklist]).map((r) => (
+                        <div key={r.k} className="clay-inset px-3 py-2 rounded-xl text-cyan-700">
+                          <span className="font-bold">X</span> {r.l}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Orthopedic Supports */}
+                {[
+                  { k: "useFajaDorsoLumbar", l: "Uso de Faja Dorso-Lumbar" },
+                  { k: "useRodillera", l: "Uso de Rodillera durante actividad fisica" },
+                  { k: "useOrthopedicInsoles", l: "Plantillas / Calzado Ortopedico" },
+                ].filter(r => consultation.recommendationsChecklist![r.k as keyof typeof consultation.recommendationsChecklist]).length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-[10px] font-bold text-violet-600 uppercase tracking-wider mb-1">Soportes Ortopedicos</p>
+                    <div className="grid grid-cols-1 gap-1 text-xs">
+                      {[
+                        { k: "useFajaDorsoLumbar", l: "Uso de Faja Dorso-Lumbar" },
+                        { k: "useRodillera", l: "Uso de Rodillera durante actividad fisica" },
+                        { k: "useOrthopedicInsoles", l: "Plantillas / Calzado Ortopedico" },
+                      ].filter(r => consultation.recommendationsChecklist![r.k as keyof typeof consultation.recommendationsChecklist]).map((r) => (
+                        <div key={r.k} className="clay-inset px-3 py-2 rounded-xl text-violet-700">
+                          <span className="font-bold">X</span> {r.l}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {(consultation.treatmentDurationApprox || consultation.improvementEstimate) && (
                   <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
                     {consultation.treatmentDurationApprox && (
@@ -432,7 +491,7 @@ export default function PrintView() {
                   <div className="mt-4 space-y-1">
                     <p className="text-sm font-bold text-slate-900">Dr. Admin</p>
                     <p className="text-xs text-slate-500">CMP: 12345</p>
-                    <p className="text-[10px] text-slate-500">Medicina Integrativa</p>
+                    <p className="text-[10px] text-slate-500">Terapia del Dolor y Medicina Regenerativa</p>
                   </div>
                 </div>
               </div>
@@ -442,7 +501,7 @@ export default function PrintView() {
           {/* Footer */}
           <div className="clay-inset mx-6 mb-6 px-6 py-3 rounded-xl print:mx-0 print:mb-0 print:rounded-none">
             <div className="flex items-center justify-between text-[10px] text-slate-500">
-              <span>MedIntegra - Sistema Clinico v1.0</span>
+              <span>Ejes Terapeuticos - Doctores en Terapia del Dolor</span>
               <span>Documento generado electronicamente</span>
             </div>
           </div>
