@@ -116,20 +116,21 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
   return (
     <div className="space-y-3" ref={containerRef}>
       <div className="relative">
-        <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Buscar Codigo CIE-10</Label>
+        <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Diagnostico CIE-10</Label>
         <div className="relative mt-1.5">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
           <Input
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") e.preventDefault(); }}
             onFocus={() => {
               if (query.length >= 2 && results.length > 0) {
                 updateDropdownPos();
                 setIsOpen(true);
               }
             }}
-            placeholder="Buscar por codigo o descripcion (ej: M17, Gonartrosis...)"
+            placeholder="Escriba el nombre de la enfermedad (ej: Gonartrosis, Asma, Diabetes...)"
             className="h-11 pl-10 pr-4 text-sm bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10 transition-all"
           />
           {isLoading && (

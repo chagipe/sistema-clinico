@@ -10,18 +10,32 @@ export async function GET(request: NextRequest) {
       return NextResponse.json([]);
     }
 
-    const codes = await prisma.cie10Code.findMany({
+    const descriptionMatches = await prisma.cie10Code.findMany({
       where: {
-        OR: [
-          { code: { contains: q, mode: "insensitive" } },
-          { description: { contains: q, mode: "insensitive" } },
-        ],
+        description: { contains: q, mode: "insensitive" },
       },
       take: 20,
       orderBy: { code: "asc" },
     });
 
-    return NextResponse.json(codes);
+    const codeMatches = await prisma.cie10Code.findMany({
+      where: {
+        code: { contains: q, mode: "insensitive" },
+      },
+      take: 20,
+      orderBy: { code: "asc" },
+    });
+
+    const seen = new Set<string>();
+    const merged: typeof descriptionMatches = [];
+    for (const item of [...descriptionMatches, ...codeMatches]) {
+      if (!seen.has(item.id)) {
+        seen.add(item.id);
+        merged.push(item);
+      }
+    }
+
+    return NextResponse.json(merged.slice(0, 20));
   } catch (error) {
     console.error("Error fetching CIE-10 codes:", error);
     return NextResponse.json(
