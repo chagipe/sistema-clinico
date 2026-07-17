@@ -87,10 +87,18 @@ export default function ReportesPage() {
     <div className="flex flex-col h-full">
       <TopBar
         title="Reportes"
-        subtitle="Estadisticas y metricas del sistema"
+        subtitle="Resumen de actividad clinica del consultorio"
+        showSearch={false}
       />
 
       <div className="flex-1 p-6 space-y-6 overflow-y-auto">
+        {/* Description */}
+        <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-4">
+          <p className="text-sm text-cyan-800">
+            <strong>Reportes del Consultorio:</strong> Resumen automatico de pacientes registrados, consultas realizadas, distribucion por tipo (Nueva, Reconsulta, Tratamiento) y por estado (En Espera, En Atencion, Finalizado).
+          </p>
+        </div>
+
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
             <div className="clay-card p-8 flex flex-col items-center gap-3">

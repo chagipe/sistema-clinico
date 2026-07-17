@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TopBar } from "@/components/layout/top-bar";
@@ -42,9 +43,10 @@ interface Patient {
 }
 
 export default function PacientesContent() {
+  const searchParams = useSearchParams();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const deleteDialogRef = useRef<HTMLDialogElement>(null);
   const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null);
@@ -144,7 +146,7 @@ export default function PacientesContent() {
 
       <dialog
         ref={dialogRef}
-        className="backdrop:bg-black/50 backdrop-blur-sm rounded-2xl p-0 border-0 max-w-[500px] w-full"
+        className="m-auto backdrop:bg-black/50 backdrop-blur-sm rounded-2xl p-0 border-0 max-w-[500px] w-full"
         style={{ backgroundColor: "transparent" }}
       >
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-6">
@@ -240,7 +242,7 @@ export default function PacientesContent() {
 
       <dialog
         ref={deleteDialogRef}
-        className="backdrop:bg-black/50 backdrop-blur-sm rounded-2xl p-0 border-0 max-w-[400px] w-full"
+        className="m-auto backdrop:bg-black/50 backdrop-blur-sm rounded-2xl p-0 border-0 max-w-[400px] w-full"
         style={{ backgroundColor: "transparent" }}
       >
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-6">
@@ -281,13 +283,13 @@ export default function PacientesContent() {
         {/* Search */}
         <div className="bg-white rounded-xl border border-slate-200 p-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar por nombre, apellido o DNI..."
-              className="clay-input w-full pl-10 pr-4 py-3 text-sm text-slate-900 placeholder:text-slate-400"
+              className="w-full pl-10 pr-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10 transition-all"
             />
           </div>
         </div>

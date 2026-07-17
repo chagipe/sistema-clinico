@@ -2,15 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 import { TopBar } from "@/components/layout/top-bar";
 import {
   Plus,
@@ -25,6 +17,7 @@ import {
   CheckCircle2,
   X,
   Trash2,
+  Search,
 } from "lucide-react";
 import { getGreeting, calculateAge, cn } from "@/lib/utils";
 
@@ -44,19 +37,13 @@ interface Patient {
 }
 
 export default function DashboardContent() {
+  const router = useRouter();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const deleteDialogRef = useRef<HTMLDialogElement>(null);
   const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null);
-  const [newPatient, setNewPatient] = useState({
-    dni: "",
-    firstName: "",
-    lastName: "",
-    birthDate: "",
-    gender: "",
-    phone: "",
-  });
+  const [patientSearchQuery, setPatientSearchQuery] = useState("");
 
   useEffect(() => { fetchPatients(); }, []);
 
@@ -70,27 +57,6 @@ export default function DashboardContent() {
       setPatients([]);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleCreatePatient = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("/api/patients", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newPatient),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        dialogRef.current?.close();
-        setNewPatient({ dni: "", firstName: "", lastName: "", birthDate: "", gender: "", phone: "" });
-        fetchPatients();
-      } else {
-        alert("Error: " + (data.error || JSON.stringify(data)));
-      }
-    } catch (error: any) {
-      alert("Error de conexion: " + error.message);
     }
   };
 
@@ -111,6 +77,21 @@ export default function DashboardContent() {
     } catch (error: any) {
       alert("Error de conexion: " + error.message);
     }
+  };
+
+  const filteredPatientsForDialog = patients.filter((p) => {
+    const q = patientSearchQuery.toLowerCase();
+    return (
+      p.firstName.toLowerCase().includes(q) ||
+      p.lastName.toLowerCase().includes(q) ||
+      p.dni.includes(q)
+    );
+  });
+
+  const handleStartConsultation = (patientId: string) => {
+    dialogRef.current?.close();
+    setPatientSearchQuery("");
+    router.push(`/consultation?patientId=${patientId}`);
   };
 
   const getConsultationsByType = (type: string) => {
@@ -147,105 +128,82 @@ export default function DashboardContent() {
         }
       />
 
+      {/* Dialog: Select Patient for Consultation */}
       <dialog
         ref={dialogRef}
-        className="backdrop:bg-black/50 backdrop-blur-sm rounded-2xl p-0 border-0 max-w-[500px] w-full"
+        className="m-auto backdrop:bg-black/50 backdrop-blur-sm rounded-2xl p-0 border-0 max-w-[500px] w-full"
         style={{ backgroundColor: "transparent" }}
       >
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-semibold text-slate-900">Nueva Atencion</h2>
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900">Nueva Atencion</h2>
+              <p className="text-sm text-slate-500 mt-0.5">Selecciona un paciente para iniciar consulta</p>
+            </div>
             <button
               type="button"
-              onClick={() => dialogRef.current?.close()}
+              onClick={() => { dialogRef.current?.close(); setPatientSearchQuery(""); }}
               className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors"
             >
               <X className="h-4 w-4 text-slate-500" />
             </button>
           </div>
-          <form onSubmit={handleCreatePatient} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-slate-700">DNI</Label>
-                <Input
-                  value={newPatient.dni}
-                  onChange={(e) => setNewPatient({ ...newPatient, dni: e.target.value })}
-                  placeholder="Numero de documento"
-                  className="clay-input h-11 text-slate-900 placeholder:text-slate-400"
-                  required
-                />
+
+          <div className="relative mb-4">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+            <input
+              type="text"
+              value={patientSearchQuery}
+              onChange={(e) => setPatientSearchQuery(e.target.value)}
+              placeholder="Buscar por nombre, apellido o DNI..."
+              autoFocus
+              className="w-full pl-10 pr-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10 transition-all"
+            />
+          </div>
+
+          <div className="max-h-[300px] overflow-y-auto space-y-2">
+            {filteredPatientsForDialog.length === 0 ? (
+              <div className="py-8 text-center">
+                <Users className="h-8 w-8 text-slate-300 mx-auto mb-2" />
+                <p className="text-sm text-slate-500">
+                  {patientSearchQuery ? "No se encontraron pacientes" : "No hay pacientes registrados"}
+                </p>
+                {!patientSearchQuery && (
+                  <Link href="/pacientes" className="text-sm text-cyan-600 hover:text-cyan-700 font-medium mt-1 inline-block">
+                    Crear paciente
+                  </Link>
+                )}
               </div>
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-slate-700">Genero</Label>
-                <Select onValueChange={(value) => setNewPatient({ ...newPatient, gender: value })}>
-                  <SelectTrigger className="clay-input h-11 text-slate-900">
-                    <SelectValue placeholder="Seleccionar" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border border-slate-200 shadow-lg">
-                    <SelectItem value="Masculino">Masculino</SelectItem>
-                    <SelectItem value="Femenino">Femenino</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-slate-700">Nombres</Label>
-                <Input
-                  value={newPatient.firstName}
-                  onChange={(e) => setNewPatient({ ...newPatient, firstName: e.target.value })}
-                  placeholder="Nombres completos"
-                  className="clay-input h-11 text-slate-900 placeholder:text-slate-400"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-slate-700">Apellidos</Label>
-                <Input
-                  value={newPatient.lastName}
-                  onChange={(e) => setNewPatient({ ...newPatient, lastName: e.target.value })}
-                  placeholder="Apellidos completos"
-                  className="clay-input h-11 text-slate-900 placeholder:text-slate-400"
-                  required
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-slate-700">Fecha de Nacimiento</Label>
-                <Input
-                  type="date"
-                  value={newPatient.birthDate}
-                  onChange={(e) => setNewPatient({ ...newPatient, birthDate: e.target.value })}
-                  className="clay-input h-11 text-slate-900"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-slate-700">Telefono</Label>
-                <Input
-                  value={newPatient.phone}
-                  onChange={(e) => setNewPatient({ ...newPatient, phone: e.target.value })}
-                  placeholder="(01) 234-5678"
-                  className="clay-input h-11 text-slate-900 placeholder:text-slate-400"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end gap-3 pt-2">
-              <button type="button" className="clay-button px-4 py-2.5 text-sm font-medium text-slate-700" onClick={() => dialogRef.current?.close()}>
-                Cancelar
-              </button>
-              <button type="submit" className="clay-button-primary px-4 py-2.5 text-sm font-semibold">
-                Crear Paciente
-              </button>
-            </div>
-          </form>
+            ) : (
+              filteredPatientsForDialog.map((patient) => (
+                <button
+                  key={patient.id}
+                  onClick={() => handleStartConsultation(patient.id)}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all text-left"
+                >
+                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
+                    {patient.firstName.charAt(0)}{patient.lastName.charAt(0)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-slate-900 truncate">
+                      {patient.firstName} {patient.lastName}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      DNI: {patient.dni} &middot; {calculateAge(new Date(patient.birthDate))} anios
+                    </p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-slate-300 shrink-0" />
+                </button>
+              ))
+            )}
+          </div>
         </div>
       </dialog>
 
+      {/* Dialog: Confirm Delete */}
       <dialog
         ref={deleteDialogRef}
-        className="backdrop:bg-black/50 backdrop-blur-sm rounded-2xl p-0 border-0 max-w-[400px] w-full"
+        className="m-auto backdrop:bg-black/50 backdrop-blur-sm rounded-2xl p-0 border-0 max-w-[400px] w-full"
         style={{ backgroundColor: "transparent" }}
       >
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-6">
@@ -326,7 +284,7 @@ export default function DashboardContent() {
               </div>
             </div>
           </Link>
-          <Link href="/print" className="group">
+          <Link href="/historias" className="group">
             <div className="bg-white rounded-xl border border-slate-200 p-5 cursor-pointer transition-all duration-150 hover:border-slate-300 hover:shadow-md">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -342,20 +300,22 @@ export default function DashboardContent() {
               </div>
             </div>
           </Link>
-          <div className="bg-white rounded-xl border border-slate-200 p-5 cursor-pointer transition-all duration-150 hover:border-slate-300 hover:shadow-md">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-violet-500 flex items-center justify-center">
-                  <Activity className="h-6 w-6 text-white" />
+          <Link href="/reportes" className="group">
+            <div className="bg-white rounded-xl border border-slate-200 p-5 cursor-pointer transition-all duration-150 hover:border-slate-300 hover:shadow-md">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-xl bg-violet-500 flex items-center justify-center">
+                    <Activity className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-900">Reportes</h3>
+                    <p className="text-sm text-slate-500">Estadisticas y reportes</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-slate-900">Reportes</h3>
-                  <p className="text-sm text-slate-500">Estadisticas y reportes</p>
-                </div>
+                <ChevronRight className="h-5 w-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
               </div>
-              <ChevronRight className="h-5 w-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* Patient List */}
@@ -365,7 +325,7 @@ export default function DashboardContent() {
               <h3 className="text-lg font-semibold text-slate-900">Pacientes Recientes</h3>
               <p className="text-sm text-slate-500 mt-0.5">{patients.length} pacientes registrados</p>
             </div>
-            <Link href="/dashboard">
+            <Link href="/pacientes">
               <button className="clay-button px-3 py-2 text-xs font-medium text-slate-600 flex items-center gap-1">
                 Ver todos
                 <ArrowUpRight className="h-3.5 w-3.5" />

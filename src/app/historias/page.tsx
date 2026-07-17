@@ -66,28 +66,29 @@ export default function HistoriasPage() {
     <div className="flex flex-col h-full">
       <TopBar
         title="Historias Clinicas"
-        subtitle={`${consultations.length} historias registradas`}
+        subtitle="Fichas clinicas para ver e imprimir"
+        showSearch={false}
       />
 
       <div className="flex-1 p-6 space-y-6 overflow-y-auto">
         {/* Search */}
-        <div className="clay-card p-4">
+        <div className="bg-white rounded-xl border border-slate-200 p-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar por paciente o DNI..."
-              className="clay-input w-full pl-10 pr-4 py-3 text-sm text-slate-900 placeholder:text-slate-400"
+              className="w-full pl-10 pr-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10 transition-all"
             />
           </div>
         </div>
 
         {/* Historias List */}
-        <div className="clay-card">
+        <div className="bg-white rounded-xl border border-slate-200">
           <div className="px-6 py-4 border-b border-slate-200">
-            <h3 className="text-lg font-bold text-slate-900">Historias Clinicas</h3>
+            <h3 className="text-lg font-semibold text-slate-900">Historias Clinicas</h3>
             <p className="text-sm text-slate-500 mt-0.5">
               {filteredConsultations.length} de {consultations.length} historias
             </p>
