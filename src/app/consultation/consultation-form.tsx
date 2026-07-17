@@ -318,7 +318,7 @@ export default function ConsultationForm() {
       />
 
       <div className="flex-1 p-6 overflow-y-auto">
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 max-w-5xl mx-auto">
+        <form onSubmit={form.handleSubmit(onSubmit)} onKeyDown={(e) => { if (e.key === "Enter" && e.target instanceof HTMLInputElement && e.target.type !== "submit") e.preventDefault(); }} className="space-y-5 max-w-5xl mx-auto">
           {/* Patient Header */}
           <div className="clay-card p-6">
             <div className="flex flex-wrap items-center justify-between gap-4">

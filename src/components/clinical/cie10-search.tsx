@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Search } from "lucide-react";
 
@@ -59,12 +58,12 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const updateDropdownPos = () => {
+  const updateDropdownPos = useCallback(() => {
     if (inputRef.current) {
       const rect = inputRef.current.getBoundingClientRect();
-      setDropdownPos({ top: rect.bottom + window.scrollY + 8, left: rect.left + window.scrollX, width: rect.width });
+      setDropdownPos({ top: rect.bottom + 8, left: rect.left, width: rect.width });
     }
-  };
+  }, []);
 
   const handleSelect = (code: Cie10Code) => {
     onSelect(code);
@@ -119,8 +118,9 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
         <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Diagnostico CIE-10</Label>
         <div className="relative mt-1.5">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-          <Input
+          <input
             ref={inputRef}
+            type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") e.preventDefault(); }}
@@ -130,8 +130,8 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
                 setIsOpen(true);
               }
             }}
-            placeholder="Escriba el nombre de la enfermedad (ej: Gonartrosis, Asma, Diabetes...)"
-            className="h-11 pl-10 pr-4 text-sm bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10 transition-all"
+            placeholder="Escriba el nombre de la enfermedad..."
+            className="w-full h-11 pl-10 pr-4 text-sm bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10 transition-all"
           />
           {isLoading && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
