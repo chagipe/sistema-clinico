@@ -21,6 +21,7 @@ import {
   Calendar,
   FileText,
   X,
+  Trash2,
 } from "lucide-react";
 import { calculateAge, cn } from "@/lib/utils";
 
@@ -45,6 +46,8 @@ export default function PacientesContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const deleteDialogRef = useRef<HTMLDialogElement>(null);
+  const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null);
   const [newPatient, setNewPatient] = useState({
     dni: "",
     firstName: "",
@@ -84,6 +87,25 @@ export default function PacientesContent() {
         fetchPatients();
       } else {
         alert("Error: " + (data.error || JSON.stringify(data)));
+      }
+    } catch (error: any) {
+      alert("Error de conexion: " + error.message);
+    }
+  };
+
+  const handleDeletePatient = async () => {
+    if (!patientToDelete) return;
+    try {
+      const response = await fetch(`/api/patients?id=${patientToDelete.id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        deleteDialogRef.current?.close();
+        setPatientToDelete(null);
+        fetchPatients();
+      } else {
+        const data = await response.json();
+        alert("Error: " + (data.error || "No se pudo eliminar"));
       }
     } catch (error: any) {
       alert("Error de conexion: " + error.message);
@@ -216,6 +238,45 @@ export default function PacientesContent() {
         </div>
       </dialog>
 
+      <dialog
+        ref={deleteDialogRef}
+        className="backdrop:bg-black/40 rounded-2xl p-0 border-0 max-w-[400px] w-full"
+        style={{ backgroundColor: "transparent" }}
+      >
+        <div className="clay-card p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-[#3d3530]">Eliminar Paciente</h2>
+            <button
+              type="button"
+              onClick={() => { deleteDialogRef.current?.close(); setPatientToDelete(null); }}
+              className="h-8 w-8 flex items-center justify-center rounded-xl hover:bg-black/5 transition-colors"
+            >
+              <X className="h-4 w-4 text-[#7a6b5d]" />
+            </button>
+          </div>
+          <p className="text-sm text-[#7a6b5d] mb-6">
+            Estas seguro que queres eliminar a <strong className="text-[#3d3530]">{patientToDelete?.firstName} {patientToDelete?.lastName}</strong>?
+            Esta accion no se puede deshacer.
+          </p>
+          <div className="flex justify-end gap-3">
+            <button
+              type="button"
+              className="clay-button px-4 py-2.5 text-sm font-semibold text-[#3d3530]"
+              onClick={() => { deleteDialogRef.current?.close(); setPatientToDelete(null); }}
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              className="px-4 py-2.5 text-sm font-semibold text-white rounded-xl bg-[#c4625a] hover:bg-[#b0524a] transition-colors shadow-md"
+              onClick={handleDeletePatient}
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </dialog>
+
       <div className="flex-1 p-6 space-y-6 overflow-y-auto">
         {/* Search */}
         <div className="clay-card p-4">
@@ -262,51 +323,60 @@ export default function PacientesContent() {
                 {filteredPatients.map((patient) => {
                   const lastType = getLastConsultationType(patient.consultations);
                   return (
-                    <Link key={patient.id} href={`/consultation?patientId=${patient.id}`}>
-                      <div className="flex items-center justify-between p-4 rounded-2xl transition-all duration-200 cursor-pointer group hover:bg-white/30">
-                        <div className="flex items-center gap-4">
-                          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#c4a882] to-[#8b6f5c] flex items-center justify-center text-white font-bold text-sm shadow-md">
-                            {patient.firstName.charAt(0)}{patient.lastName.charAt(0)}
-                          </div>
-                          <div>
-                            <h4 className="font-semibold text-[#3d3530]">
-                              {patient.firstName} {patient.lastName}
-                            </h4>
-                            <div className="flex items-center gap-3 mt-1 text-sm text-[#7a6b5d]">
-                              <span className="flex items-center gap-1">
-                                <FileText className="h-3 w-3" />
-                                DNI: {patient.dni}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <Calendar className="h-3 w-3" />
-                                {calculateAge(new Date(patient.birthDate))} anios
-                              </span>
-                              {patient.phone && (
-                                <span className="flex items-center gap-1">
-                                  <Phone className="h-3 w-3" />
-                                  {patient.phone}
-                                </span>
-                              )}
-                            </div>
-                          </div>
+                    <div key={patient.id} className="flex items-center justify-between p-4 rounded-2xl transition-all duration-200 group hover:bg-white/30">
+                      <Link href={`/consultation?patientId=${patient.id}`} className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer">
+                        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#c4a882] to-[#8b6f5c] flex items-center justify-center text-white font-bold text-sm shadow-md shrink-0">
+                          {patient.firstName.charAt(0)}{patient.lastName.charAt(0)}
                         </div>
-                        <div className="flex items-center gap-3">
-                          {lastType && (
-                            <span className={cn(
-                              "text-[10px] font-bold px-2.5 py-1 rounded-lg",
-                              lastType === "NUEVA"
-                                ? "bg-[#8bc99a]/30 text-[#4a7a55]"
-                                : lastType === "RECONSULTA"
-                                ? "bg-[#8bb5c9]/30 text-[#4a6a7a]"
-                                : "bg-[#c9b88b]/30 text-[#7a6a3a]"
-                            )}>
-                              {lastType}
+                        <div className="min-w-0">
+                          <h4 className="font-semibold text-[#3d3530]">
+                            {patient.firstName} {patient.lastName}
+                          </h4>
+                          <div className="flex items-center gap-3 mt-1 text-sm text-[#7a6b5d]">
+                            <span className="flex items-center gap-1">
+                              <FileText className="h-3 w-3" />
+                              DNI: {patient.dni}
                             </span>
-                          )}
-                          <ChevronRight className="h-4 w-4 text-[#c9b9a8] group-hover:text-[#8b6f5c] group-hover:translate-x-0.5 transition-all" />
+                            <span className="flex items-center gap-1">
+                              <Calendar className="h-3 w-3" />
+                              {calculateAge(new Date(patient.birthDate))} anios
+                            </span>
+                            {patient.phone && (
+                              <span className="flex items-center gap-1">
+                                <Phone className="h-3 w-3" />
+                                {patient.phone}
+                              </span>
+                            )}
+                          </div>
                         </div>
+                      </Link>
+                      <div className="flex items-center gap-3 shrink-0">
+                        {lastType && (
+                          <span className={cn(
+                            "text-[10px] font-bold px-2.5 py-1 rounded-lg",
+                            lastType === "NUEVA"
+                              ? "bg-[#8bc99a]/30 text-[#4a7a55]"
+                              : lastType === "RECONSULTA"
+                              ? "bg-[#8bb5c9]/30 text-[#4a6a7a]"
+                              : "bg-[#c9b88b]/30 text-[#7a6a3a]"
+                          )}>
+                            {lastType}
+                          </span>
+                        )}
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setPatientToDelete(patient);
+                            deleteDialogRef.current?.showModal();
+                          }}
+                          className="h-8 w-8 flex items-center justify-center rounded-xl text-[#c9b9a8] hover:text-[#c4625a] hover:bg-[#c4625a]/10 transition-all opacity-0 group-hover:opacity-100"
+                          title="Eliminar paciente"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                        <ChevronRight className="h-4 w-4 text-[#c9b9a8] group-hover:text-[#8b6f5c] group-hover:translate-x-0.5 transition-all" />
                       </div>
-                    </Link>
+                    </div>
                   );
                 })}
               </div>
