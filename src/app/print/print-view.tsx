@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Printer, ArrowLeft, HeartPulse } from "lucide-react";
+import { Printer, ArrowLeft, HeartPulse, Image as ImageIcon } from "lucide-react";
 import { calculateAge, formatDateTime } from "@/lib/utils";
 import Link from "next/link";
 import { TopBar } from "@/components/layout/top-bar";
@@ -48,14 +48,26 @@ interface ConsultationData {
   };
 }
 
+interface MediaItem {
+  id: string;
+  filename: string;
+  mimeType: string;
+  data: string;
+  label?: string | null;
+}
+
 export default function PrintView() {
   const searchParams = useSearchParams();
   const consultationId = searchParams.get("id");
   const [consultation, setConsultation] = useState<ConsultationData | null>(null);
+  const [media, setMedia] = useState<MediaItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (consultationId) fetchConsultation(consultationId);
+    if (consultationId) {
+      fetchConsultation(consultationId);
+      fetchMedia(consultationId);
+    }
   }, [consultationId]);
 
   const fetchConsultation = async (id: string) => {
@@ -68,6 +80,18 @@ export default function PrintView() {
       console.error("Error fetching consultation:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchMedia = async (consultationId: string) => {
+    try {
+      const response = await fetch(`/api/media?consultationId=${consultationId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setMedia(data);
+      }
+    } catch (error) {
+      console.error("Error fetching media:", error);
     }
   };
 
@@ -372,6 +396,27 @@ export default function PrintView() {
                     )}
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Attached Images */}
+            {media.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="h-1.5 w-1.5 rounded-full bg-[#8b8bc9]" />
+                  <h3 className="text-xs font-bold text-[#3d3530] uppercase tracking-wider">7. Imagenes Adjuntas</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {media.map((item) => (
+                    <div key={item.id} className="clay-inset p-2 rounded-xl">
+                      <div className="aspect-square rounded-lg overflow-hidden bg-[#e8e0d8] flex items-center justify-center">
+                        <img src={item.data} alt={item.filename} className="w-full h-full object-contain" />
+                      </div>
+                      {item.label && <p className="text-[10px] text-[#7a6b5d] mt-1 font-medium">{item.label}</p>}
+                      <p className="text-[10px] text-[#7a6b5d] truncate">{item.filename}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 

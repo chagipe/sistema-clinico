@@ -23,6 +23,7 @@ import { Cie10Search } from "@/components/clinical/cie10-search";
 import { TreatmentTable } from "@/components/clinical/treatment-table";
 import { PrescriptionTable } from "@/components/clinical/prescription-table";
 import { RecommendationsChecklist } from "@/components/clinical/recommendations-checklist";
+import { ImageUpload } from "@/components/clinical/image-upload";
 import { TopBar } from "@/components/layout/top-bar";
 import {
   ArrowLeft,
@@ -36,6 +37,7 @@ import {
   Pill,
   Activity,
   Syringe,
+  Paperclip,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
@@ -163,6 +165,9 @@ export default function ConsultationForm() {
   const [diagnoses, setDiagnoses] = useState<
     Array<{ cie10Code: string; description: string; type: "PRESUNTIVO" | "DEFINITIVO" }>
   >([]);
+  const [images, setImages] = useState<
+    Array<{ id?: string; filename: string; mimeType: string; data: string; label?: string | null }>
+  >([]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(consultationSchema),
@@ -222,6 +227,23 @@ export default function ConsultationForm() {
       });
       if (response.ok) {
         const result = await response.json();
+
+        for (const image of images) {
+          if (!image.id) {
+            await fetch("/api/media", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                consultationId: result.id,
+                filename: image.filename,
+                mimeType: image.mimeType,
+                data: image.data,
+                label: image.label,
+              }),
+            });
+          }
+        }
+
         router.push(`/print?id=${result.id}`);
       }
     } catch (error) {
@@ -435,7 +457,12 @@ export default function ConsultationForm() {
             <RecommendationsChecklist form={form} />
           </SectionPanel>
 
-          {/* Section 7: Exams & Prognosis */}
+          {/* Section 7: Image Attachments */}
+          <SectionPanel title="Imagenes Adjuntas" subtitle="Fotos, radiografias, estudios" icon={Paperclip} iconBg="bg-[#8b8bc9]" defaultOpen={false} badge={`${images.length} archivo${images.length !== 1 ? 's' : ''}`}>
+            <ImageUpload consultationId="new" images={images} onImagesChange={setImages} />
+          </SectionPanel>
+
+          {/* Section 8: Exams & Prognosis */}
           <SectionPanel title="Examenes y Pronostico" subtitle="Examenes requeridos y tiempo estimado" icon={Activity} iconBg="bg-[#8bc9c9]">
             <div className="space-y-4">
               <div className="space-y-2">
