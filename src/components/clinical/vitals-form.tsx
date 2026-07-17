@@ -36,7 +36,7 @@ export function VitalsForm({ form }: VitalsFormProps) {
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {fields.map((field) => (
         <div key={field.id} className="space-y-1.5">
-          <Label className="text-[10px] font-semibold text-[#7a6b5d] uppercase tracking-wider">
+          <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
             {field.label}
           </Label>
           <Input
@@ -46,8 +46,8 @@ export function VitalsForm({ form }: VitalsFormProps) {
             readOnly={field.readOnly}
             className={
               field.readOnly
-                ? "clay-inset h-10 text-sm font-bold text-[#3d3530]"
-                : "clay-input h-10 text-sm text-[#3d3530] placeholder:text-[#7a6b5d]/50"
+                ? "clay-inset h-10 text-sm font-bold text-slate-900"
+                : "clay-input h-10 text-sm text-slate-900 placeholder:text-slate-400"
             }
             {...form.register(
               `vitals.${field.id}` as any,

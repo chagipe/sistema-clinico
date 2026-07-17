@@ -32,56 +32,56 @@ const RECOMMENDATIONS: {
     label: "No citricos",
     description: "Limon, naranja, fresa, pina, mandarina",
     icon: Ban,
-    bgActive: "bg-[#c9a88b]/40",
-    borderActive: "border-[#c9a88b]",
+    bgActive: "bg-amber-100",
+    borderActive: "border-amber-400",
   },
   {
     id: "noVitaminC",
     label: "No Vitamina C",
     description: "Suplementos de Vitamina C",
     icon: Pill,
-    bgActive: "bg-[#c9c48b]/40",
-    borderActive: "border-[#c9c48b]",
+    bgActive: "bg-yellow-100",
+    borderActive: "border-yellow-400",
   },
   {
     id: "noPhysicalEffort",
     label: "No esfuerzo fisico",
     description: "Actividades de alto impacto",
     icon: Dumbbell,
-    bgActive: "bg-[#c98b8b]/40",
-    borderActive: "border-[#c98b8b]",
+    bgActive: "bg-red-100",
+    borderActive: "border-red-400",
   },
   {
     id: "noAlcohol",
     label: "No alcohol",
     description: "Bebidas alcoholicas",
     icon: Wine,
-    bgActive: "bg-[#b88bc9]/40",
-    borderActive: "border-[#b88bc9]",
+    bgActive: "bg-violet-100",
+    borderActive: "border-violet-400",
   },
   {
     id: "noAvocado",
     label: "No palta",
     description: "Aguacate",
     icon: Leaf,
-    bgActive: "bg-[#8bc99a]/40",
-    borderActive: "border-[#8bc99a]",
+    bgActive: "bg-emerald-100",
+    borderActive: "border-emerald-400",
   },
   {
     id: "noRedMeat",
     label: "No carne roja",
     description: "Chancho, res, cordero",
     icon: UtensilsCrossed,
-    bgActive: "bg-[#c98b9a]/40",
-    borderActive: "border-[#c98b9a]",
+    bgActive: "bg-pink-100",
+    borderActive: "border-pink-400",
   },
   {
     id: "useOrthopedicSupport",
     label: "Uso de faja/ortopedico",
     description: "Faja dorso lumbar, rodillera o colchon ortopedico",
     icon: Bandage,
-    bgActive: "bg-[#8bc9c9]/40",
-    borderActive: "border-[#8bc9c9]",
+    bgActive: "bg-teal-100",
+    borderActive: "border-teal-400",
   },
 ];
 
@@ -109,13 +109,13 @@ export function RecommendationsChecklist({ form }: RecommendationsChecklistProps
               }
               className={cn(
                 "h-5 w-5 rounded-lg border-2",
-                isChecked ? "bg-[#8b6f5c] border-[#8b6f5c]" : "border-[#c9b9a8]"
+                isChecked ? "bg-cyan-600 border-cyan-600" : "border-slate-200"
               )}
             />
-            <Icon className="h-5 w-5 text-[#7a6b5d] shrink-0" />
+            <Icon className="h-5 w-5 text-slate-500 shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-[#3d3530]">{rec.label}</p>
-              <p className="text-xs text-[#7a6b5d] truncate">{rec.description}</p>
+              <p className="text-sm font-semibold text-slate-900">{rec.label}</p>
+              <p className="text-xs text-slate-500 truncate">{rec.description}</p>
             </div>
           </label>
         );

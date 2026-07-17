@@ -125,10 +125,10 @@ export default function DashboardContent() {
   const totalCount = nuevaCount + reconsultaCount + tratamientoCount;
 
   const stats = [
-    { label: "Total Pacientes", value: patients.length, icon: Users, iconBg: "bg-[#8bb5c9]", change: "+12%", up: true },
-    { label: "En Espera", value: totalCount, icon: Timer, iconBg: "bg-[#c9b88b]", change: "-5%", up: false },
-    { label: "Consultas Hoy", value: patients.length, icon: Calendar, iconBg: "bg-[#8bc99a]", change: "+8%", up: true },
-    { label: "Finalizados", value: 0, icon: CheckCircle2, iconBg: "bg-[#b88bc9]", change: "0", up: true },
+    { label: "Total Pacientes", value: patients.length, icon: Users, iconBg: "bg-cyan-500", change: "+12%", up: true },
+    { label: "En Espera", value: totalCount, icon: Timer, iconBg: "bg-amber-500", change: "-5%", up: false },
+    { label: "Consultas Hoy", value: patients.length, icon: Calendar, iconBg: "bg-emerald-500", change: "+8%", up: true },
+    { label: "Finalizados", value: 0, icon: CheckCircle2, iconBg: "bg-violet-500", change: "0", up: true },
   ];
 
   return (
@@ -149,39 +149,39 @@ export default function DashboardContent() {
 
       <dialog
         ref={dialogRef}
-        className="backdrop:bg-black/40 rounded-2xl p-0 border-0 max-w-[500px] w-full"
+        className="backdrop:bg-black/50 backdrop-blur-sm rounded-2xl p-0 border-0 max-w-[500px] w-full"
         style={{ backgroundColor: "transparent" }}
       >
-        <div className="clay-card p-6">
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-bold text-[#3d3530]">Nueva Atencion</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Nueva Atencion</h2>
             <button
               type="button"
               onClick={() => dialogRef.current?.close()}
-              className="h-8 w-8 flex items-center justify-center rounded-xl hover:bg-black/5 transition-colors"
+              className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors"
             >
-              <X className="h-4 w-4 text-[#7a6b5d]" />
+              <X className="h-4 w-4 text-slate-500" />
             </button>
           </div>
           <form onSubmit={handleCreatePatient} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-sm font-semibold text-[#3d3530]">DNI</Label>
+                <Label className="text-sm font-medium text-slate-700">DNI</Label>
                 <Input
                   value={newPatient.dni}
                   onChange={(e) => setNewPatient({ ...newPatient, dni: e.target.value })}
                   placeholder="Numero de documento"
-                  className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
+                  className="clay-input h-11 text-slate-900 placeholder:text-slate-400"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-sm font-semibold text-[#3d3530]">Genero</Label>
+                <Label className="text-sm font-medium text-slate-700">Genero</Label>
                 <Select onValueChange={(value) => setNewPatient({ ...newPatient, gender: value })}>
-                  <SelectTrigger className="clay-input h-11 text-[#3d3530]">
+                  <SelectTrigger className="clay-input h-11 text-slate-900">
                     <SelectValue placeholder="Seleccionar" />
                   </SelectTrigger>
-                  <SelectContent className="clay-card border-0">
+                  <SelectContent className="bg-white border border-slate-200 shadow-lg">
                     <SelectItem value="Masculino">Masculino</SelectItem>
                     <SelectItem value="Femenino">Femenino</SelectItem>
                   </SelectContent>
@@ -190,49 +190,49 @@ export default function DashboardContent() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-sm font-semibold text-[#3d3530]">Nombres</Label>
+                <Label className="text-sm font-medium text-slate-700">Nombres</Label>
                 <Input
                   value={newPatient.firstName}
                   onChange={(e) => setNewPatient({ ...newPatient, firstName: e.target.value })}
                   placeholder="Nombres completos"
-                  className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
+                  className="clay-input h-11 text-slate-900 placeholder:text-slate-400"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-sm font-semibold text-[#3d3530]">Apellidos</Label>
+                <Label className="text-sm font-medium text-slate-700">Apellidos</Label>
                 <Input
                   value={newPatient.lastName}
                   onChange={(e) => setNewPatient({ ...newPatient, lastName: e.target.value })}
                   placeholder="Apellidos completos"
-                  className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
+                  className="clay-input h-11 text-slate-900 placeholder:text-slate-400"
                   required
                 />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-sm font-semibold text-[#3d3530]">Fecha de Nacimiento</Label>
+                <Label className="text-sm font-medium text-slate-700">Fecha de Nacimiento</Label>
                 <Input
                   type="date"
                   value={newPatient.birthDate}
                   onChange={(e) => setNewPatient({ ...newPatient, birthDate: e.target.value })}
-                  className="clay-input h-11 text-[#3d3530]"
+                  className="clay-input h-11 text-slate-900"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-sm font-semibold text-[#3d3530]">Telefono</Label>
+                <Label className="text-sm font-medium text-slate-700">Telefono</Label>
                 <Input
                   value={newPatient.phone}
                   onChange={(e) => setNewPatient({ ...newPatient, phone: e.target.value })}
                   placeholder="(01) 234-5678"
-                  className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
+                  className="clay-input h-11 text-slate-900 placeholder:text-slate-400"
                 />
               </div>
             </div>
             <div className="flex justify-end gap-3 pt-2">
-              <button type="button" className="clay-button px-4 py-2.5 text-sm font-semibold text-[#3d3530]" onClick={() => dialogRef.current?.close()}>
+              <button type="button" className="clay-button px-4 py-2.5 text-sm font-medium text-slate-700" onClick={() => dialogRef.current?.close()}>
                 Cancelar
               </button>
               <button type="submit" className="clay-button-primary px-4 py-2.5 text-sm font-semibold">
@@ -245,35 +245,35 @@ export default function DashboardContent() {
 
       <dialog
         ref={deleteDialogRef}
-        className="backdrop:bg-black/40 rounded-2xl p-0 border-0 max-w-[400px] w-full"
+        className="backdrop:bg-black/50 backdrop-blur-sm rounded-2xl p-0 border-0 max-w-[400px] w-full"
         style={{ backgroundColor: "transparent" }}
       >
-        <div className="clay-card p-6">
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-[#3d3530]">Eliminar Paciente</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Eliminar Paciente</h2>
             <button
               type="button"
               onClick={() => { deleteDialogRef.current?.close(); setPatientToDelete(null); }}
-              className="h-8 w-8 flex items-center justify-center rounded-xl hover:bg-black/5 transition-colors"
+              className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors"
             >
-              <X className="h-4 w-4 text-[#7a6b5d]" />
+              <X className="h-4 w-4 text-slate-500" />
             </button>
           </div>
-          <p className="text-sm text-[#7a6b5d] mb-6">
-            Estas seguro que queres eliminar a <strong className="text-[#3d3530]">{patientToDelete?.firstName} {patientToDelete?.lastName}</strong>?
+          <p className="text-sm text-slate-600 mb-6">
+            Estas seguro que queres eliminar a <strong className="text-slate-900">{patientToDelete?.firstName} {patientToDelete?.lastName}</strong>?
             Esta accion no se puede deshacer.
           </p>
           <div className="flex justify-end gap-3">
             <button
               type="button"
-              className="clay-button px-4 py-2.5 text-sm font-semibold text-[#3d3530]"
+              className="clay-button px-4 py-2.5 text-sm font-medium text-slate-700"
               onClick={() => { deleteDialogRef.current?.close(); setPatientToDelete(null); }}
             >
               Cancelar
             </button>
             <button
               type="button"
-              className="px-4 py-2.5 text-sm font-semibold text-white rounded-xl bg-[#c4625a] hover:bg-[#b0524a] transition-colors shadow-md"
+              className="px-4 py-2.5 text-sm font-semibold text-white rounded-lg bg-red-600 hover:bg-red-700 transition-colors"
               onClick={handleDeletePatient}
             >
               Eliminar
@@ -286,21 +286,21 @@ export default function DashboardContent() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {stats.map((stat) => (
-            <div key={stat.label} className="clay-flat p-5">
+            <div key={stat.label} className="bg-white rounded-xl border border-slate-200 p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-[#7a6b5d] uppercase tracking-wider">{stat.label}</p>
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{stat.label}</p>
                   <div className="flex items-baseline gap-2 mt-1.5">
-                    <p className="text-3xl font-bold text-[#3d3530]">{stat.value}</p>
+                    <p className="text-3xl font-bold text-slate-900">{stat.value}</p>
                     <span className={cn(
-                      "text-[10px] font-bold px-1.5 py-0.5 rounded-lg",
-                      stat.up ? "bg-[#8bc99a]/30 text-[#4a7a55]" : "bg-[#c98b8b]/30 text-[#7a4a4a]"
+                      "text-[10px] font-semibold px-1.5 py-0.5 rounded-md",
+                      stat.up ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
                     )}>
                       {stat.change}
                     </span>
                   </div>
                 </div>
-                <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center shadow-md", stat.iconBg)}>
+                <div className={cn("h-12 w-12 rounded-xl flex items-center justify-center", stat.iconBg)}>
                   <stat.icon className="h-6 w-6 text-white" />
                 </div>
               </div>
@@ -311,62 +311,62 @@ export default function DashboardContent() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <Link href="/consultation" className="group">
-            <div className="clay-card p-5 cursor-pointer transition-all duration-200 hover:scale-[1.02]">
+            <div className="bg-white rounded-xl border border-slate-200 p-5 cursor-pointer transition-all duration-150 hover:border-slate-300 hover:shadow-md">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-2xl bg-[#8bc99a] flex items-center justify-center shadow-md">
+                  <div className="h-12 w-12 rounded-xl bg-emerald-500 flex items-center justify-center">
                     <Stethoscope className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#3d3530]">Nueva Consulta</h3>
-                    <p className="text-sm text-[#7a6b5d]">Iniciar historia clinica</p>
+                    <h3 className="font-semibold text-slate-900">Nueva Consulta</h3>
+                    <p className="text-sm text-slate-500">Iniciar historia clinica</p>
                   </div>
                 </div>
-                <ChevronRight className="h-5 w-5 text-[#7a6b5d] group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="h-5 w-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
           </Link>
           <Link href="/print" className="group">
-            <div className="clay-card p-5 cursor-pointer transition-all duration-200 hover:scale-[1.02]">
+            <div className="bg-white rounded-xl border border-slate-200 p-5 cursor-pointer transition-all duration-150 hover:border-slate-300 hover:shadow-md">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-2xl bg-[#8bb5c9] flex items-center justify-center shadow-md">
+                  <div className="h-12 w-12 rounded-xl bg-cyan-500 flex items-center justify-center">
                     <FileText className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#3d3530]">Historias Clinicas</h3>
-                    <p className="text-sm text-[#7a6b5d]">Ver e imprimir fichas</p>
+                    <h3 className="font-semibold text-slate-900">Historias Clinicas</h3>
+                    <p className="text-sm text-slate-500">Ver e imprimir fichas</p>
                   </div>
                 </div>
-                <ChevronRight className="h-5 w-5 text-[#7a6b5d] group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="h-5 w-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
           </Link>
-          <div className="clay-card p-5 cursor-pointer transition-all duration-200 hover:scale-[1.02]">
+          <div className="bg-white rounded-xl border border-slate-200 p-5 cursor-pointer transition-all duration-150 hover:border-slate-300 hover:shadow-md">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-2xl bg-[#b88bc9] flex items-center justify-center shadow-md">
+                <div className="h-12 w-12 rounded-xl bg-violet-500 flex items-center justify-center">
                   <Activity className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-[#3d3530]">Reportes</h3>
-                  <p className="text-sm text-[#7a6b5d]">Estadisticas y reportes</p>
+                  <h3 className="font-semibold text-slate-900">Reportes</h3>
+                  <p className="text-sm text-slate-500">Estadisticas y reportes</p>
                 </div>
               </div>
-              <ChevronRight className="h-5 w-5 text-[#7a6b5d] group-hover:translate-x-1 transition-transform" />
+              <ChevronRight className="h-5 w-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
         </div>
 
         {/* Patient List */}
-        <div className="clay-card">
-          <div className="px-6 py-4 flex items-center justify-between border-b border-[#c9b9a8]/50">
+        <div className="bg-white rounded-xl border border-slate-200">
+          <div className="px-6 py-4 flex items-center justify-between border-b border-slate-200">
             <div>
-              <h3 className="text-lg font-bold text-[#3d3530]">Pacientes Recientes</h3>
-              <p className="text-sm text-[#7a6b5d] mt-0.5">{patients.length} pacientes registrados</p>
+              <h3 className="text-lg font-semibold text-slate-900">Pacientes Recientes</h3>
+              <p className="text-sm text-slate-500 mt-0.5">{patients.length} pacientes registrados</p>
             </div>
             <Link href="/dashboard">
-              <button className="clay-button px-3 py-2 text-xs font-semibold text-[#3d3530] flex items-center gap-1">
+              <button className="clay-button px-3 py-2 text-xs font-medium text-slate-600 flex items-center gap-1">
                 Ver todos
                 <ArrowUpRight className="h-3.5 w-3.5" />
               </button>
@@ -375,25 +375,25 @@ export default function DashboardContent() {
           <div className="p-6">
             {patients.length === 0 ? (
               <div className="py-12 text-center">
-                <div className="clay-inset h-16 w-16 flex items-center justify-center mx-auto mb-4">
-                  <Users className="h-8 w-8 text-[#7a6b5d]" />
+                <div className="h-16 w-16 flex items-center justify-center mx-auto mb-4 bg-slate-100 rounded-xl">
+                  <Users className="h-8 w-8 text-slate-400" />
                 </div>
-                <p className="text-[#3d3530] font-medium">No hay pacientes registrados</p>
-                <p className="text-sm text-[#7a6b5d] mt-1">Comienza creando un nuevo paciente</p>
+                <p className="text-slate-900 font-medium">No hay pacientes registrados</p>
+                <p className="text-sm text-slate-500 mt-1">Comienza creando un nuevo paciente</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {patients.slice(0, 6).map((patient) => (
-                  <div key={patient.id} className="flex items-center justify-between p-4 rounded-2xl transition-all duration-200 group hover:bg-white/30">
+                  <div key={patient.id} className="flex items-center justify-between p-4 rounded-xl transition-all duration-150 group hover:bg-slate-50 border border-transparent hover:border-slate-200">
                     <Link href={`/consultation?patientId=${patient.id}`} className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer">
-                      <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-[#c4a882] to-[#8b6f5c] flex items-center justify-center text-white font-bold text-sm shadow-md shrink-0">
+                      <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
                         {patient.firstName.charAt(0)}{patient.lastName.charAt(0)}
                       </div>
                       <div className="min-w-0">
-                        <h4 className="font-semibold text-[#3d3530]">
+                        <h4 className="font-semibold text-slate-900">
                           {patient.firstName} {patient.lastName}
                         </h4>
-                        <p className="text-sm text-[#7a6b5d]">
+                        <p className="text-sm text-slate-500">
                           DNI: {patient.dni} &middot; {calculateAge(new Date(patient.birthDate))} anios &middot; {patient.gender}
                         </p>
                       </div>
@@ -401,12 +401,12 @@ export default function DashboardContent() {
                     <div className="flex items-center gap-3 shrink-0">
                       {patient.consultations.length > 0 && (
                         <span className={cn(
-                          "text-[10px] font-bold px-2.5 py-1 rounded-lg",
+                          "text-[10px] font-semibold px-2 py-0.5 rounded-md",
                           patient.consultations[0].type === "NUEVA"
-                            ? "bg-[#8bc99a]/30 text-[#4a7a55]"
+                            ? "bg-emerald-100 text-emerald-700"
                             : patient.consultations[0].type === "RECONSULTA"
-                            ? "bg-[#8bb5c9]/30 text-[#4a6a7a]"
-                            : "bg-[#c9b88b]/30 text-[#7a6a3a]"
+                            ? "bg-cyan-100 text-cyan-700"
+                            : "bg-amber-100 text-amber-700"
                         )}>
                           {patient.consultations[0].type}
                         </span>
@@ -417,12 +417,12 @@ export default function DashboardContent() {
                           setPatientToDelete(patient);
                           deleteDialogRef.current?.showModal();
                         }}
-                        className="h-8 w-8 flex items-center justify-center rounded-xl text-[#c9b9a8] hover:text-[#c4625a] hover:bg-[#c4625a]/10 transition-all opacity-0 group-hover:opacity-100"
+                        className="h-8 w-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
                         title="Eliminar paciente"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
-                      <ChevronRight className="h-4 w-4 text-[#c9b9a8] group-hover:text-[#8b6f5c] group-hover:translate-x-0.5 transition-all" />
+                      <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-slate-600 group-hover:translate-x-0.5 transition-all" />
                     </div>
                   </div>
                 ))}

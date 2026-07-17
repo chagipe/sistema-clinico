@@ -95,7 +95,7 @@ export function ImageUpload({ consultationId, images, onImagesChange }: ImageUpl
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
-          className="clay-button flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-[#3d3530] hover:bg-white/50 transition-colors"
+          className="clay-button flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-slate-900 hover:bg-white/50 transition-colors"
         >
           <Upload className="h-4 w-4" />
           {uploading ? "Subiendo..." : "Adjuntar imagen"}
@@ -114,7 +114,7 @@ export function ImageUpload({ consultationId, images, onImagesChange }: ImageUpl
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {images.map((image, index) => (
             <div key={image.id || index} className="relative group clay-inset p-2 rounded-xl">
-              <div className="aspect-square rounded-lg overflow-hidden bg-[#e8e0d8] flex items-center justify-center">
+              <div className="aspect-square rounded-lg overflow-hidden bg-slate-100 flex items-center justify-center">
                 {image.data ? (
                   <img
                     src={image.data}
@@ -122,7 +122,7 @@ export function ImageUpload({ consultationId, images, onImagesChange }: ImageUpl
                     className="w-full h-full object-contain"
                   />
                 ) : (
-                  <ImageIcon className="h-8 w-8 text-[#7a6b5d]" />
+                  <ImageIcon className="h-8 w-8 text-slate-500" />
                 )}
               </div>
               <div className="mt-1.5">
@@ -135,17 +135,17 @@ export function ImageUpload({ consultationId, images, onImagesChange }: ImageUpl
                     onImagesChange(updated);
                   }}
                   placeholder="Agregar nota..."
-                  className="clay-input w-full px-2 py-1 text-xs text-[#3d3530] placeholder:text-[#7a6b5d]/50"
+                  className="clay-input w-full px-2 py-1 text-xs text-slate-900 placeholder:text-slate-400"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => handleDelete(index)}
-                className="absolute top-3 right-3 h-6 w-6 flex items-center justify-center rounded-lg bg-[#c4625a] text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
+                className="absolute top-3 right-3 h-6 w-6 flex items-center justify-center rounded-lg bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
               >
                 <Trash2 className="h-3 w-3" />
               </button>
-              <p className="text-[10px] text-[#7a6b5d] mt-1 truncate">{image.filename}</p>
+              <p className="text-[10px] text-slate-500 mt-1 truncate">{image.filename}</p>
             </div>
           ))}
         </div>

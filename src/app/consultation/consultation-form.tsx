@@ -128,25 +128,25 @@ function SectionPanel({ title, subtitle, icon: Icon, iconBg, children, defaultOp
             <Icon className="h-5 w-5 text-white" />
           </div>
           <div className="text-left">
-            <h3 className="font-bold text-[#3d3530]">{title}</h3>
-            {subtitle && <p className="text-xs text-[#7a6b5d]">{subtitle}</p>}
+            <h3 className="font-bold text-slate-900">{title}</h3>
+            {subtitle && <p className="text-xs text-slate-500">{subtitle}</p>}
           </div>
         </div>
         <div className="flex items-center gap-2">
           {badge && (
-            <span className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-[#c9b9a8]/40 text-[#7a6b5d]">
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-500">
               {badge}
             </span>
           )}
           {isOpen ? (
-            <ChevronUp className="h-5 w-5 text-[#7a6b5d]" />
+            <ChevronUp className="h-5 w-5 text-slate-500" />
           ) : (
-            <ChevronDown className="h-5 w-5 text-[#7a6b5d]" />
+            <ChevronDown className="h-5 w-5 text-slate-500" />
           )}
         </div>
       </button>
       {isOpen && (
-        <div className="px-6 pb-6 pt-2 border-t border-[#c9b9a8]/30">
+        <div className="px-6 pb-6 pt-2 border-t border-slate-200">
           {children}
         </div>
       )}
@@ -259,8 +259,8 @@ export default function ConsultationForm() {
         <TopBar title="Cargando..." />
         <div className="flex-1 flex items-center justify-center">
           <div className="clay-card p-8 flex flex-col items-center gap-3">
-            <div className="h-10 w-10 border-4 border-[#c9b9a8] border-t-[#8b6f5c] rounded-full animate-spin" />
-            <p className="text-sm text-[#7a6b5d]">Cargando datos del paciente...</p>
+            <div className="h-10 w-10 border-4 border-slate-200 border-t-cyan-500 rounded-full animate-spin" />
+            <p className="text-sm text-slate-500">Cargando datos del paciente...</p>
           </div>
         </div>
       </div>
@@ -274,10 +274,10 @@ export default function ConsultationForm() {
         <div className="flex-1 flex items-center justify-center">
           <div className="clay-card p-8 text-center">
             <div className="clay-inset h-16 w-16 flex items-center justify-center mx-auto mb-4">
-              <AlertTriangle className="h-8 w-8 text-[#c4625a]" />
+              <AlertTriangle className="h-8 w-8 text-red-500" />
             </div>
-            <h2 className="text-lg font-bold text-[#3d3530] mb-2">Paciente no encontrado</h2>
-            <p className="text-sm text-[#7a6b5d] mb-4">No se encontro el paciente solicitado</p>
+            <h2 className="text-lg font-bold text-slate-900 mb-2">Paciente no encontrado</h2>
+            <p className="text-sm text-slate-500 mb-4">No se encontro el paciente solicitado</p>
             <Link href="/dashboard">
               <button className="clay-button-primary px-4 py-2.5 text-sm font-semibold flex items-center gap-2 mx-auto">
                 <ArrowLeft className="h-4 w-4" />
@@ -300,7 +300,7 @@ export default function ConsultationForm() {
             <button
               onClick={() => form.handleSubmit(onSubmit)()}
               disabled={isSaving}
-              className="clay-button px-4 py-2.5 text-sm font-semibold text-[#3d3530] flex items-center gap-2"
+              className="clay-button px-4 py-2.5 text-sm font-semibold text-slate-900 flex items-center gap-2"
             >
               <Save className="h-4 w-4" />
               Guardar
@@ -323,25 +323,25 @@ export default function ConsultationForm() {
           <div className="clay-card p-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#c4a882] to-[#8b6f5c] flex items-center justify-center text-white font-bold text-xl shadow-md">
+                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center text-white font-bold text-xl shadow-md">
                   {patient.firstName.charAt(0)}{patient.lastName.charAt(0)}
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-[#3d3530]">
+                  <h2 className="text-xl font-bold text-slate-900">
                     {patient.firstName} {patient.lastName}
                   </h2>
                   <div className="flex items-center gap-3 mt-1">
-                    <span className="text-[#7a6b5d] text-sm">DNI: {patient.dni}</span>
-                    <span className="text-[#c9b9a8]">|</span>
-                    <span className="text-[#7a6b5d] text-sm">{calculateAge(new Date(patient.birthDate))} anios</span>
-                    <span className="text-[#c9b9a8]">|</span>
-                    <span className="text-[#7a6b5d] text-sm">{patient.gender}</span>
+                    <span className="text-slate-500 text-sm">DNI: {patient.dni}</span>
+                    <span className="text-slate-300">|</span>
+                    <span className="text-slate-500 text-sm">{calculateAge(new Date(patient.birthDate))} anios</span>
+                    <span className="text-slate-300">|</span>
+                    <span className="text-slate-500 text-sm">{patient.gender}</span>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 {form.watch("hasAccidentsOps") && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-lg bg-[#c98b8b]/30 text-[#7a4a4a]">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-lg bg-red-100 text-red-700">
                     <AlertTriangle className="h-3 w-3" />
                     Accidente/Operacion
                   </span>
@@ -349,14 +349,14 @@ export default function ConsultationForm() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5 pt-5 border-t border-[#c9b9a8]/30">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5 pt-5 border-t border-slate-200">
               <div className="space-y-2">
-                <Label className="text-xs font-semibold text-[#7a6b5d] uppercase tracking-wider">Tipo de Consulta</Label>
+                <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tipo de Consulta</Label>
                 <Select
                   onValueChange={(value) => form.setValue("type", value as "NUEVA" | "RECONSULTA" | "TRATAMIENTO")}
                   defaultValue="NUEVA"
                 >
-                  <SelectTrigger className="clay-input h-11 text-[#3d3530]">
+                  <SelectTrigger className="clay-input h-11 text-slate-900">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="clay-card border-0">
@@ -371,67 +371,67 @@ export default function ConsultationForm() {
                   id="hasAccidentsOps"
                   checked={form.watch("hasAccidentsOps")}
                   onCheckedChange={(checked) => form.setValue("hasAccidentsOps", !!checked)}
-                  className="border-2 border-[#c9b9a8] data-[state=checked]:bg-[#8b6f5c] data-[state=checked]:border-[#8b6f5c]"
+                  className="border-2 border-slate-200 data-[state=checked]:bg-cyan-600 data-[state=checked]:border-cyan-600"
                 />
-                <Label htmlFor="hasAccidentsOps" className="cursor-pointer text-sm font-medium text-[#3d3530]">
+                <Label htmlFor="hasAccidentsOps" className="cursor-pointer text-sm font-medium text-slate-900">
                   Accidentes y/o operacion
                 </Label>
               </div>
               <div className="space-y-2">
-                <Label className="text-xs font-semibold text-[#7a6b5d] uppercase tracking-wider">Alergias</Label>
+                <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Alergias</Label>
                 <Input
                   placeholder="Describe alergias..."
                   {...form.register("allergies")}
-                  className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
+                  className="clay-input h-11 text-slate-900 placeholder:text-slate-400"
                 />
               </div>
             </div>
           </div>
 
           {/* Section 1: Vitals */}
-          <SectionPanel title="Triaje y Funciones Vitales" subtitle="Presion arterial, frecuencias, peso y talla" icon={Heart} iconBg="bg-[#c98b8b]" badge="Vitales">
+          <SectionPanel title="Triaje y Funciones Vitales" subtitle="Presion arterial, frecuencias, peso y talla" icon={Heart} iconBg="bg-red-500" badge="Vitales">
             <VitalsForm form={form} />
           </SectionPanel>
 
           {/* Section 2: Clinical Evaluation */}
-          <SectionPanel title="Evaluacion Clinica" subtitle="Motivo, historia y examen fisico" icon={FileText} iconBg="bg-[#8bb5c9]" badge="Eval">
+          <SectionPanel title="Evaluacion Clinica" subtitle="Motivo, historia y examen fisico" icon={FileText} iconBg="bg-cyan-500" badge="Eval">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-xs font-semibold text-[#7a6b5d] uppercase tracking-wider">Motivo de Consulta</Label>
-                <Textarea placeholder="Describa el motivo principal de la consulta..." className="clay-input min-h-[100px] text-[#3d3530] placeholder:text-[#7a6b5d]/50 resize-none" {...form.register("consultationReason")} />
+                <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Motivo de Consulta</Label>
+                <Textarea placeholder="Describa el motivo principal de la consulta..." className="clay-input min-h-[100px] text-slate-900 placeholder:text-slate-400 resize-none" {...form.register("consultationReason")} />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs font-semibold text-[#7a6b5d] uppercase tracking-wider">Historia de la Enfermedad Actual</Label>
-                <Textarea placeholder="Describa la evolucion y sintomatologia..." className="clay-input min-h-[120px] text-[#3d3530] placeholder:text-[#7a6b5d]/50 resize-none" {...form.register("diseaseHistory")} />
+                <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Historia de la Enfermedad Actual</Label>
+                <Textarea placeholder="Describa la evolucion y sintomatologia..." className="clay-input min-h-[120px] text-slate-900 placeholder:text-slate-400 resize-none" {...form.register("diseaseHistory")} />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs font-semibold text-[#7a6b5d] uppercase tracking-wider">Examen Fisico / Exploracion</Label>
-                <Textarea placeholder="Detalle hallazgos del examen fisico..." className="clay-input min-h-[120px] text-[#3d3530] placeholder:text-[#7a6b5d]/50 resize-none" {...form.register("physicalExam")} />
+                <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Examen Fisico / Exploracion</Label>
+                <Textarea placeholder="Detalle hallazgos del examen fisico..." className="clay-input min-h-[120px] text-slate-900 placeholder:text-slate-400 resize-none" {...form.register("physicalExam")} />
               </div>
             </div>
           </SectionPanel>
 
           {/* Section 3: Diagnosis */}
-          <SectionPanel title="Diagnostico CIE-10" subtitle="Busqueda y seleccion de codigos" icon={Stethoscope} iconBg="bg-[#8bc99a]" badge={diagnoses.length > 0 ? `${diagnoses.length} Dx` : "CIE-10"}>
+          <SectionPanel title="Diagnostico CIE-10" subtitle="Busqueda y seleccion de codigos" icon={Stethoscope} iconBg="bg-emerald-500" badge={diagnoses.length > 0 ? `${diagnoses.length} Dx` : "CIE-10"}>
             <div className="space-y-4">
               <Cie10Search onSelect={handleAddDiagnosis} selectedCodes={diagnoses} onRemove={handleRemoveDiagnosis} />
               {diagnoses.length > 0 && (
                 <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-[#7a6b5d] uppercase tracking-wider">Diagnosticos Seleccionados</Label>
+                  <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Diagnosticos Seleccionados</Label>
                   <div className="space-y-2">
                     {diagnoses.map((diag) => (
                       <div key={diag.cie10Code} className="flex items-center justify-between p-3 rounded-xl clay-inset">
                         <div className="flex items-center gap-3">
                           <span className={cn(
                             "text-[10px] font-bold px-2 py-0.5 rounded-lg",
-                            diag.type === "DEFINITIVO" ? "bg-[#8bc99a]/30 text-[#4a7a55]" : "bg-[#c9b88b]/30 text-[#7a6a3a]"
+                            diag.type === "DEFINITIVO" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
                           )}>
                             {diag.type}
                           </span>
-                          <span className="font-mono text-sm font-bold text-[#3d3530]">{diag.cie10Code}</span>
-                          <span className="text-sm text-[#7a6b5d]">{diag.description}</span>
+                          <span className="font-mono text-sm font-bold text-slate-900">{diag.cie10Code}</span>
+                          <span className="text-sm text-slate-500">{diag.description}</span>
                         </div>
-                        <button type="button" onClick={() => handleToggleDiagnosisType(diag.cie10Code)} className="text-xs text-[#7a6b5d] hover:text-[#8b6f5c] font-medium">
+                        <button type="button" onClick={() => handleToggleDiagnosisType(diag.cie10Code)} className="text-xs text-slate-500 hover:text-cyan-600 font-medium">
                           Cambiar a {diag.type === "PRESUNTIVO" ? "Definitivo" : "Presuntivo"}
                         </button>
                       </div>
@@ -443,52 +443,52 @@ export default function ConsultationForm() {
           </SectionPanel>
 
           {/* Section 4: Treatment */}
-          <SectionPanel title="Tratamiento Alternativo" subtitle="Ozonoterapia, Plasma, Viscosuplementacion" icon={Syringe} iconBg="bg-[#b88bc9]" badge="Procedimientos">
+          <SectionPanel title="Tratamiento Alternativo" subtitle="Ozonoterapia, Plasma, Viscosuplementacion" icon={Syringe} iconBg="bg-violet-500" badge="Procedimientos">
             <TreatmentTable form={form} />
           </SectionPanel>
 
           {/* Section 5: Prescription */}
-          <SectionPanel title="Receta Medica" subtitle="Medicamentos, dosis e indicaciones" icon={Pill} iconBg="bg-[#c9b88b]" badge="Rx">
+          <SectionPanel title="Receta Medica" subtitle="Medicamentos, dosis e indicaciones" icon={Pill} iconBg="bg-amber-500" badge="Rx">
             <PrescriptionTable form={form} />
           </SectionPanel>
 
           {/* Section 6: Recommendations */}
-          <SectionPanel title="Recomendaciones y Restricciones" subtitle="Checklist predefinido" icon={ClipboardList} iconBg="bg-[#c9a88b]">
+          <SectionPanel title="Recomendaciones y Restricciones" subtitle="Checklist predefinido" icon={ClipboardList} iconBg="bg-amber-500">
             <RecommendationsChecklist form={form} />
           </SectionPanel>
 
           {/* Section 7: Image Attachments */}
-          <SectionPanel title="Imagenes Adjuntas" subtitle="Fotos, radiografias, estudios" icon={Paperclip} iconBg="bg-[#8b8bc9]" defaultOpen={false} badge={`${images.length} archivo${images.length !== 1 ? 's' : ''}`}>
+          <SectionPanel title="Imagenes Adjuntas" subtitle="Fotos, radiografias, estudios" icon={Paperclip} iconBg="bg-indigo-500" defaultOpen={false} badge={`${images.length} archivo${images.length !== 1 ? 's' : ''}`}>
             <ImageUpload consultationId="new" images={images} onImagesChange={setImages} />
           </SectionPanel>
 
           {/* Section 8: Exams & Prognosis */}
-          <SectionPanel title="Examenes y Pronostico" subtitle="Examenes requeridos y tiempo estimado" icon={Activity} iconBg="bg-[#8bc9c9]">
+          <SectionPanel title="Examenes y Pronostico" subtitle="Examenes requeridos y tiempo estimado" icon={Activity} iconBg="bg-teal-500">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-xs font-semibold text-[#7a6b5d] uppercase tracking-wider">Examenes Requeridos</Label>
-                <Textarea placeholder="Ej: Rayos X de rodilla, Resonancia Magnetica de columna lumbar..." className="clay-input min-h-[100px] text-[#3d3530] placeholder:text-[#7a6b5d]/50 resize-none" {...form.register("labExamsRequested")} />
+                <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Examenes Requeridos</Label>
+                <Textarea placeholder="Ej: Rayos X de rodilla, Resonancia Magnetica de columna lumbar..." className="clay-input min-h-[100px] text-slate-900 placeholder:text-slate-400 resize-none" {...form.register("labExamsRequested")} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-[#7a6b5d] uppercase tracking-wider">Tiempo Aproximado de Tratamiento</Label>
-                  <Input placeholder="Ej: Aproximadamente 2 meses" {...form.register("treatmentDurationApprox")} className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50" />
+                  <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tiempo Aproximado de Tratamiento</Label>
+                  <Input placeholder="Ej: Aproximadamente 2 meses" {...form.register("treatmentDurationApprox")} className="clay-input h-11 text-slate-900 placeholder:text-slate-400" />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-[#7a6b5d] uppercase tracking-wider">Tiempo Estimado de Mejora</Label>
-                  <Input placeholder="Ej: A partir de 4ta semana entre 30% a 70%" {...form.register("improvementEstimate")} className="clay-input h-11 text-[#3d3530] placeholder:text-[#7a6b5d]/50" />
+                  <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tiempo Estimado de Mejora</Label>
+                  <Input placeholder="Ej: A partir de 4ta semana entre 30% a 70%" {...form.register("improvementEstimate")} className="clay-input h-11 text-slate-900 placeholder:text-slate-400" />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label className="text-xs font-semibold text-[#7a6b5d] uppercase tracking-wider">Comentarios del Doctor</Label>
-                <Textarea placeholder="Observaciones adicionales..." className="clay-input min-h-[100px] text-[#3d3530] placeholder:text-[#7a6b5d]/50 resize-none" {...form.register("doctorComments")} />
+                <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Comentarios del Doctor</Label>
+                <Textarea placeholder="Observaciones adicionales..." className="clay-input min-h-[100px] text-slate-900 placeholder:text-slate-400 resize-none" {...form.register("doctorComments")} />
               </div>
             </div>
           </SectionPanel>
 
           {/* Submit */}
           <div className="flex justify-end gap-3 pb-8 pt-2">
-            <button type="button" onClick={() => router.push("/dashboard")} className="clay-button px-5 py-2.5 text-sm font-semibold text-[#3d3530]">
+            <button type="button" onClick={() => router.push("/dashboard")} className="clay-button px-5 py-2.5 text-sm font-semibold text-slate-900">
               Cancelar
             </button>
             <button type="submit" disabled={isSaving} className="clay-button-primary px-6 py-2.5 text-sm font-semibold flex items-center gap-2">

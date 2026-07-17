@@ -68,21 +68,21 @@ export function TreatmentTable({ form }: TreatmentTableProps) {
         <div key={field.id} className="clay-inset p-4 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="h-7 w-7 rounded-lg bg-[#b88bc9]/30 text-[#7a4a8a] flex items-center justify-center text-xs font-bold">
+              <span className="h-7 w-7 rounded-lg bg-violet-100 text-violet-700 flex items-center justify-center text-xs font-bold">
                 {index + 1}
               </span>
-              <h4 className="font-semibold text-[#3d3530]">Procedimiento</h4>
+              <h4 className="font-semibold text-slate-900">Procedimiento</h4>
             </div>
-            <button type="button" onClick={() => remove(index)} className="p-1.5 rounded-lg text-[#7a6b5d] hover:text-[#c4625a] hover:bg-[#c98b8b]/20 transition-colors">
+            <button type="button" onClick={() => remove(index)} className="p-1.5 rounded-lg text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors">
               <Trash2 className="h-4 w-4" />
             </button>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-semibold text-[#7a6b5d] uppercase tracking-wider">Tratamiento</Label>
+              <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Tratamiento</Label>
               <Select onValueChange={(value) => form.setValue(`alternativeTreatments.${index}.treatmentName`, value)} value={form.watch(`alternativeTreatments.${index}.treatmentName`) || ""}>
-                <SelectTrigger className="clay-input h-10 text-[#3d3530]">
+                <SelectTrigger className="clay-input h-10 text-slate-900">
                   <SelectValue placeholder="Seleccionar" />
                 </SelectTrigger>
                 <SelectContent className="clay-card border-0">
@@ -91,9 +91,9 @@ export function TreatmentTable({ form }: TreatmentTableProps) {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-semibold text-[#7a6b5d] uppercase tracking-wider">Zona Corporal</Label>
+              <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Zona Corporal</Label>
               <Select onValueChange={(value) => form.setValue(`alternativeTreatments.${index}.bodyZone`, value)} value={form.watch(`alternativeTreatments.${index}.bodyZone`) || ""}>
-                <SelectTrigger className="clay-input h-10 text-[#3d3530]">
+                <SelectTrigger className="clay-input h-10 text-slate-900">
                   <SelectValue placeholder="Seleccionar zona" />
                 </SelectTrigger>
                 <SelectContent className="clay-card border-0">
@@ -102,9 +102,9 @@ export function TreatmentTable({ form }: TreatmentTableProps) {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-semibold text-[#7a6b5d] uppercase tracking-wider">Frecuencia</Label>
+              <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Frecuencia</Label>
               <Select onValueChange={(value) => form.setValue(`alternativeTreatments.${index}.frequency`, value)} value={form.watch(`alternativeTreatments.${index}.frequency`) || ""}>
-                <SelectTrigger className="clay-input h-10 text-[#3d3530]">
+                <SelectTrigger className="clay-input h-10 text-slate-900">
                   <SelectValue placeholder="Seleccionar" />
                 </SelectTrigger>
                 <SelectContent className="clay-card border-0">
@@ -113,21 +113,21 @@ export function TreatmentTable({ form }: TreatmentTableProps) {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-semibold text-[#7a6b5d] uppercase tracking-wider">Nro. Sesiones</Label>
-              <Input type="number" min="1" placeholder="0" className="clay-input h-10 text-[#3d3530]" {...form.register(`alternativeTreatments.${index}.sessionsCount`, { valueAsNumber: true })} />
+              <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Nro. Sesiones</Label>
+              <Input type="number" min="1" placeholder="0" className="clay-input h-10 text-slate-900" {...form.register(`alternativeTreatments.${index}.sessionsCount`, { valueAsNumber: true })} />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-semibold text-[#7a6b5d] uppercase tracking-wider">Costo Sesion (S/)</Label>
-              <Input type="number" step="0.01" placeholder="0.00" className="clay-input h-10 text-[#3d3530]" {...form.register(`alternativeTreatments.${index}.sessionPrice`, { valueAsNumber: true })} />
+              <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Costo Sesion (S/)</Label>
+              <Input type="number" step="0.01" placeholder="0.00" className="clay-input h-10 text-slate-900" {...form.register(`alternativeTreatments.${index}.sessionPrice`, { valueAsNumber: true })} />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-semibold text-[#7a6b5d] uppercase tracking-wider">Costo Paquete (S/)</Label>
-              <Input type="number" step="0.01" placeholder="0.00" className="clay-input h-10 text-[#3d3530]" {...form.register(`alternativeTreatments.${index}.packagePrice`, { valueAsNumber: true })} />
+              <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Costo Paquete (S/)</Label>
+              <Input type="number" step="0.01" placeholder="0.00" className="clay-input h-10 text-slate-900" {...form.register(`alternativeTreatments.${index}.packagePrice`, { valueAsNumber: true })} />
             </div>
             <div className="space-y-1.5 lg:col-span-2">
-              <Label className="text-[10px] font-semibold text-[#7a6b5d] uppercase tracking-wider">Total Estimado</Label>
+              <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Total Estimado</Label>
               <div className="clay-inset h-10 px-3 flex items-center">
-                <span className="font-bold text-[#8b6f5c]">S/ {calculateTotal(index)}</span>
+                <span className="font-bold text-cyan-600">S/ {calculateTotal(index)}</span>
               </div>
             </div>
           </div>
@@ -137,7 +137,7 @@ export function TreatmentTable({ form }: TreatmentTableProps) {
       <button
         type="button"
         onClick={() => append({ treatmentName: "", bodyZone: "", frequency: "", sessionsCount: 0, sessionPrice: 0, packagePrice: 0 })}
-        className="w-full clay-button py-4 text-sm font-semibold text-[#7a6b5d] flex items-center justify-center gap-2 border-2 border-dashed border-[#c9b9a8]"
+        className="w-full clay-button py-4 text-sm font-semibold text-slate-500 flex items-center justify-center gap-2 border-2 border-dashed border-slate-200"
       >
         <Plus className="h-5 w-5" />
         Agregar Procedimiento

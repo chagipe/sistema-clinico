@@ -26,25 +26,25 @@
 }
 
 :root {
-  --background: #e8e0d8;
-  --foreground: #3d3530;
-  --card: #efe8e0;
-  --card-foreground: #3d3530;
-  --popover: #efe8e0;
-  --popover-foreground: #3d3530;
-  --primary: #8b6f5c;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #0891b2;
   --primary-foreground: #ffffff;
-  --secondary: #d4c4b5;
-  --secondary-foreground: #3d3530;
-  --muted: #d4c4b5;
-  --muted-foreground: #7a6b5d;
-  --accent: #c4a882;
-  --accent-foreground: #3d3530;
-  --destructive: #c4625a;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #c9b9a8;
-  --input: #c9b9a8;
-  --ring: #8b6f5c;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #0891b2;
 }
 
 body {
@@ -53,145 +53,116 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Claymorphism utilities */
+/* Modern SaaS utilities - keeping same class names for compatibility */
 .clay {
-  background: #efe8e0;
-  border-radius: 20px;
-  box-shadow:
-    8px 8px 16px #c9b9a8,
-    -8px -8px 16px #ffffff;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
 }
 
 .clay-sm {
-  background: #efe8e0;
-  border-radius: 14px;
-  box-shadow:
-    4px 4px 10px #c9b9a8,
-    -4px -4px 10px #ffffff;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
 }
 
 .clay-inset {
-  background: #e2d9ce;
-  border-radius: 14px;
-  box-shadow:
-    inset 4px 4px 8px #c9b9a8,
-    inset -4px -4px 8px #ffffff;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
 }
 
 .clay-flat {
-  background: linear-gradient(145deg, #f5ede5, #e2d9ce);
-  border-radius: 20px;
-  box-shadow:
-    6px 6px 14px #c9b9a8,
-    -6px -6px 14px #ffffff;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
 }
 
 .clay-button {
-  background: linear-gradient(145deg, #f5ede5, #e2d9ce);
-  border-radius: 12px;
-  box-shadow:
-    4px 4px 8px #c9b9a8,
-    -4px -4px 8px #ffffff;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition: all 0.15s ease;
 }
 
 .clay-button:hover {
-  box-shadow:
-    2px 2px 4px #c9b9a8,
-    -2px -2px 4px #ffffff;
+  background: #f8fafc;
+  border-color: #cbd5e1;
 }
 
 .clay-button:active {
-  box-shadow:
-    inset 2px 2px 4px #c9b9a8,
-    inset -2px -2px 4px #ffffff;
+  background: #f1f5f9;
 }
 
 .clay-button-primary {
-  background: linear-gradient(145deg, #9e7e6a, #7a6050);
+  background: #0891b2;
   color: white;
-  border-radius: 12px;
+  border-radius: 8px;
   cursor: pointer;
-  box-shadow:
-    4px 4px 8px #c9b9a8,
-    -4px -4px 8px #ffffff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition: all 0.15s ease;
+  border: 1px solid transparent;
 }
 
 .clay-button-primary:hover {
-  box-shadow:
-    2px 2px 4px #c9b9a8,
-    -2px -2px 4px #ffffff;
+  background: #0e7490;
 }
 
 .clay-button-primary:active {
-  box-shadow:
-    inset 2px 2px 4px rgba(0,0,0,0.15),
-    inset -2px -2px 4px rgba(255,255,255,0.1);
+  background: #155e75;
 }
 
-/* Sidebar claymorphism */
+/* Sidebar - modern dark style */
 .clay-sidebar {
-  background: linear-gradient(180deg, #4a3f36 0%, #3d3530 50%, #4a3f36 100%);
-  box-shadow:
-    8px 0 24px rgba(0,0,0,0.15);
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
 }
 
 .clay-sidebar-item {
-  background: rgba(255,255,255,0.04);
-  border-radius: 12px;
-  transition: all 0.2s ease;
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.04),
-    inset -1px -1px 2px rgba(0,0,0,0.08);
+  background: transparent;
+  border-radius: 8px;
+  transition: all 0.15s ease;
 }
 
 .clay-sidebar-item:hover {
-  background: rgba(255,255,255,0.09);
-  box-shadow:
-    inset 2px 2px 4px rgba(255,255,255,0.06),
-    inset -2px -2px 4px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .clay-sidebar-item-active {
-  background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
-  box-shadow:
-    inset 2px 2px 4px rgba(255,255,255,0.08),
-    inset -2px -2px 4px rgba(0,0,0,0.12);
-  border-radius: 12px;
+  background: rgba(8, 145, 178, 0.2);
+  border-radius: 8px;
+  border-left: 3px solid #0891b2;
 }
 
 /* Section panels */
 .clay-section-header {
-  border-radius: 16px;
-  box-shadow:
-    4px 4px 10px rgba(0,0,0,0.06),
-    -4px -4px 10px rgba(255,255,255,0.8);
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
 }
 
 .clay-card {
-  background: #efe8e0;
-  border-radius: 20px;
-  box-shadow:
-    8px 8px 16px #c9b9a8,
-    -8px -8px 16px #ffffff;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
 }
 
 .clay-input {
-  background: #e8e0d8;
-  border-radius: 12px;
-  box-shadow:
-    inset 3px 3px 6px #c9b9a8,
-    inset -3px -3px 6px #ffffff;
-  border: none;
-  outline: none;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.15s ease;
 }
 
 .clay-input:focus {
-  box-shadow:
-    inset 3px 3px 6px #c0af9e,
-    inset -3px -3px 6px #ffffff,
-    0 0 0 2px #b89a80;
+  border-color: #0891b2;
+  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
+  outline: none;
 }
 
 dialog {
@@ -199,10 +170,13 @@ dialog {
   border: none;
   max-width: 500px;
   width: calc(100% - 2rem);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 dialog::backdrop {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
 }
 
 @media print {

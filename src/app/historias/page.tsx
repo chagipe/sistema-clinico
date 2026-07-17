@@ -73,40 +73,40 @@ export default function HistoriasPage() {
         {/* Search */}
         <div className="clay-card p-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#7a6b5d]" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar por paciente o DNI..."
-              className="clay-input w-full pl-10 pr-4 py-3 text-sm text-[#3d3530] placeholder:text-[#7a6b5d]/50"
+              className="clay-input w-full pl-10 pr-4 py-3 text-sm text-slate-900 placeholder:text-slate-400"
             />
           </div>
         </div>
 
         {/* Historias List */}
         <div className="clay-card">
-          <div className="px-6 py-4 border-b border-[#c9b9a8]/50">
-            <h3 className="text-lg font-bold text-[#3d3530]">Historias Clinicas</h3>
-            <p className="text-sm text-[#7a6b5d] mt-0.5">
+          <div className="px-6 py-4 border-b border-slate-200">
+            <h3 className="text-lg font-bold text-slate-900">Historias Clinicas</h3>
+            <p className="text-sm text-slate-500 mt-0.5">
               {filteredConsultations.length} de {consultations.length} historias
             </p>
           </div>
           <div className="p-6">
             {isLoading ? (
               <div className="py-12 text-center">
-                <div className="h-10 w-10 border-4 border-[#c9b9a8] border-t-[#8b6f5c] rounded-full animate-spin mx-auto mb-4" />
-                <p className="text-sm text-[#7a6b5d]">Cargando historias...</p>
+                <div className="h-10 w-10 border-4 border-slate-200 border-t-cyan-500 rounded-full animate-spin mx-auto mb-4" />
+                <p className="text-sm text-slate-500">Cargando historias...</p>
               </div>
             ) : filteredConsultations.length === 0 ? (
               <div className="py-12 text-center">
                 <div className="clay-inset h-16 w-16 flex items-center justify-center mx-auto mb-4">
-                  <FileText className="h-8 w-8 text-[#7a6b5d]" />
+                  <FileText className="h-8 w-8 text-slate-500" />
                 </div>
-                <p className="text-[#3d3530] font-medium">
+                <p className="text-slate-900 font-medium">
                   {searchQuery ? "No se encontraron historias" : "No hay historias clinicas registradas"}
                 </p>
-                <p className="text-sm text-[#7a6b5d] mt-1">
+                <p className="text-sm text-slate-500 mt-1">
                   Las historias apareceran aqui cuando se registren consultas
                 </p>
               </div>
@@ -115,22 +115,22 @@ export default function HistoriasPage() {
                 {filteredConsultations.map((consultation) => (
                   <div
                     key={consultation.id}
-                    className="flex items-center justify-between p-4 rounded-2xl transition-all duration-200 hover:bg-white/30"
+                    className="flex items-center justify-between p-4 rounded-2xl transition-all duration-200 hover:bg-slate-50"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#c4a882] to-[#8b6f5c] flex items-center justify-center text-white font-bold text-sm shadow-md">
+                      <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
                         {consultation.patient.firstName.charAt(0)}{consultation.patient.lastName.charAt(0)}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h4 className="font-semibold text-[#3d3530]">
+                          <h4 className="font-semibold text-slate-900">
                             {consultation.patient.firstName} {consultation.patient.lastName}
                           </h4>
-                          <span className="text-[10px] font-bold text-[#7a6b5d]">
+                          <span className="text-[10px] font-bold text-slate-500">
                             #{consultation.id.slice(0, 8).toUpperCase()}
                           </span>
                         </div>
-                        <div className="flex items-center gap-3 mt-1 text-sm text-[#7a6b5d]">
+                        <div className="flex items-center gap-3 mt-1 text-sm text-slate-500">
                           <span className="flex items-center gap-1">
                             <User className="h-3 w-3" />
                             DNI: {consultation.patient.dni}
@@ -141,7 +141,7 @@ export default function HistoriasPage() {
                           </span>
                         </div>
                         {consultation.diagnoses.length > 0 && (
-                          <p className="text-xs text-[#7a6b5d] mt-1">
+                          <p className="text-xs text-slate-500 mt-1">
                             Dx: {consultation.diagnoses.map((d) => `${d.cie10Code} - ${d.description}`).join(" | ")}
                           </p>
                         )}
@@ -149,7 +149,7 @@ export default function HistoriasPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Link href={`/print?id=${consultation.id}`}>
-                        <button className="clay-button px-3 py-2 text-xs font-semibold text-[#3d3530] flex items-center gap-1.5 hover:bg-white/50">
+                        <button className="clay-button px-3 py-2 text-xs font-semibold text-slate-900 flex items-center gap-1.5 hover:bg-slate-50">
                           <Eye className="h-3.5 w-3.5" />
                           Ver Ficha
                         </button>

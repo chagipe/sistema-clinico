@@ -67,20 +67,20 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
   return (
     <div className="space-y-3" ref={containerRef}>
       <div className="relative">
-        <Label className="text-[10px] font-semibold text-[#7a6b5d] uppercase tracking-wider">Buscar Codigo CIE-10</Label>
+        <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Buscar Codigo CIE-10</Label>
         <div className="relative mt-1.5">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#7a6b5d]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
           <Input
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => query.length >= 2 && results.length > 0 && setIsOpen(true)}
             placeholder="Buscar por codigo o descripcion (ej: M17, Gonartrosis...)"
-            className="clay-input h-11 pl-10 text-[#3d3530] placeholder:text-[#7a6b5d]/50"
+            className="clay-input h-11 pl-10 text-slate-900 placeholder:text-slate-400"
           />
           {isLoading && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <div className="h-4 w-4 border-2 border-[#c9b9a8] border-t-[#8b6f5c] rounded-full animate-spin" />
+              <div className="h-4 w-4 border-2 border-slate-200 border-t-cyan-500 rounded-full animate-spin" />
             </div>
           )}
         </div>
@@ -94,13 +94,13 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
                 onClick={() => handleSelect(code)}
               >
                 <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs font-bold text-[#8b6f5c] clay-inset px-2 py-1 rounded-lg">
+                  <span className="font-mono text-xs font-bold text-cyan-600 clay-inset px-2 py-1 rounded-lg">
                     {code.code}
                   </span>
-                  <span className="text-sm text-[#3d3530]">{code.description}</span>
+                  <span className="text-sm text-slate-900">{code.description}</span>
                 </div>
                 {code.category && (
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-[#c9b9a8]/30 text-[#7a6b5d]">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-slate-100 text-slate-500">
                     {code.category}
                   </span>
                 )}
@@ -111,7 +111,7 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
 
         {isOpen && query.length >= 2 && results.length === 0 && !isLoading && (
           <div className="absolute z-50 w-full mt-2 clay-card p-6 text-center">
-            <p className="text-sm text-[#7a6b5d]">No se encontraron resultados para "{query}"</p>
+            <p className="text-sm text-slate-500">No se encontraron resultados para "{query}"</p>
           </div>
         )}
       </div>

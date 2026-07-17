@@ -103,8 +103,8 @@ export default function PrintView() {
         <TopBar title="Cargando..." />
         <div className="flex-1 flex items-center justify-center">
           <div className="clay-card p-8 flex flex-col items-center gap-3">
-            <div className="h-10 w-10 border-4 border-[#c9b9a8] border-t-[#8b6f5c] rounded-full animate-spin" />
-            <p className="text-sm text-[#7a6b5d]">Cargando ficha clinica...</p>
+            <div className="h-10 w-10 border-4 border-slate-200 border-t-cyan-500 rounded-full animate-spin" />
+            <p className="text-sm text-slate-500">Cargando ficha clinica...</p>
           </div>
         </div>
       </div>
@@ -118,10 +118,10 @@ export default function PrintView() {
         <div className="flex-1 flex items-center justify-center">
           <div className="clay-card p-8 text-center">
             <div className="clay-inset h-16 w-16 flex items-center justify-center mx-auto mb-4">
-              <Printer className="h-8 w-8 text-[#7a6b5d]" />
+              <Printer className="h-8 w-8 text-slate-500" />
             </div>
-            <h2 className="text-lg font-bold text-[#3d3530] mb-2">Consulta no encontrada</h2>
-            <p className="text-sm text-[#7a6b5d] mb-4">No se encontro la consulta solicitada</p>
+            <h2 className="text-lg font-bold text-slate-900 mb-2">Consulta no encontrada</h2>
+            <p className="text-sm text-slate-500 mb-4">No se encontro la consulta solicitada</p>
             <Link href="/dashboard">
               <button className="clay-button-primary px-4 py-2.5 text-sm font-semibold flex items-center gap-2 mx-auto">
                 <ArrowLeft className="h-4 w-4" /> Volver
@@ -151,10 +151,10 @@ export default function PrintView() {
       <div className="flex-1 p-6 overflow-y-auto print:p-0">
         <div className="max-w-[210mm] mx-auto clay-card overflow-hidden print:shadow-none print:rounded-none print:max-w-none">
           {/* Header */}
-          <div className="bg-gradient-to-r from-[#3d3530] to-[#4a3f36] px-8 py-6 text-white print:bg-[#3d3530]">
+          <div className="bg-gradient-to-r from-slate-900 to-slate-800 px-8 py-6 text-white print:bg-slate-900">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#c4a882] to-[#8b6f5c] flex items-center justify-center shadow-lg print:bg-[#8b6f5c]">
+                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center shadow-lg print:bg-cyan-600">
                   <HeartPulse className="h-8 w-8 text-white" />
                 </div>
                 <div>
@@ -177,38 +177,38 @@ export default function PrintView() {
             <div className="clay-inset p-4">
               <div className="grid grid-cols-5 gap-4 text-sm">
                 <div>
-                  <span className="text-[10px] font-bold text-[#7a6b5d] uppercase tracking-wider">Paciente</span>
-                  <p className="font-bold text-[#3d3530] mt-0.5">{patient.firstName} {patient.lastName}</p>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Paciente</span>
+                  <p className="font-bold text-slate-900 mt-0.5">{patient.firstName} {patient.lastName}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold text-[#7a6b5d] uppercase tracking-wider">DNI</span>
-                  <p className="font-bold text-[#3d3530] mt-0.5">{patient.dni}</p>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">DNI</span>
+                  <p className="font-bold text-slate-900 mt-0.5">{patient.dni}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold text-[#7a6b5d] uppercase tracking-wider">Edad</span>
-                  <p className="font-bold text-[#3d3530] mt-0.5">{calculateAge(new Date(patient.birthDate))} anios</p>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Edad</span>
+                  <p className="font-bold text-slate-900 mt-0.5">{calculateAge(new Date(patient.birthDate))} anios</p>
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold text-[#7a6b5d] uppercase tracking-wider">Genero</span>
-                  <p className="font-bold text-[#3d3530] mt-0.5">{patient.gender}</p>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Genero</span>
+                  <p className="font-bold text-slate-900 mt-0.5">{patient.gender}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold text-[#7a6b5d] uppercase tracking-wider">Tipo</span>
-                  <p className="font-bold text-[#3d3530] mt-0.5">{consultation.type}</p>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Tipo</span>
+                  <p className="font-bold text-slate-900 mt-0.5">{consultation.type}</p>
                 </div>
               </div>
               {consultation.hasAccidentsOps && (
-                <div className="mt-3 pt-3 border-t border-[#c9b9a8]">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#7a4a4a] bg-[#c98b8b]/20 px-2.5 py-1 rounded-lg">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#c4625a]" />
+                <div className="mt-3 pt-3 border-t border-slate-200">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-700 bg-red-100 px-2.5 py-1 rounded-lg">
+                    <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
                     Historia de accidentes y/o operaciones
                   </span>
                 </div>
               )}
               {consultation.allergies && (
-                <div className="mt-2 pt-2 border-t border-[#c9b9a8]">
-                  <span className="text-[10px] font-bold text-[#7a6b5d] uppercase tracking-wider">Alergias: </span>
-                  <span className="text-sm font-medium text-[#7a6a3a]">{consultation.allergies}</span>
+                <div className="mt-2 pt-2 border-t border-slate-200">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Alergias: </span>
+                  <span className="text-sm font-medium text-amber-700">{consultation.allergies}</span>
                 </div>
               )}
             </div>
@@ -217,8 +217,8 @@ export default function PrintView() {
             {vitals && (
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-[#c98b8b]" />
-                  <h3 className="text-xs font-bold text-[#3d3530] uppercase tracking-wider">1. Triaje y Funciones Vitales</h3>
+                  <div className="h-1.5 w-1.5 rounded-full bg-red-400" />
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">1. Triaje y Funciones Vitales</h3>
                 </div>
                 <div className="grid grid-cols-4 gap-2 text-xs">
                   {[
@@ -232,8 +232,8 @@ export default function PrintView() {
                     { l: "Temp", v: vitals.temperature, u: "C" },
                   ].map((item) => (
                     <div key={item.l} className="clay-inset px-3 py-2">
-                      <span className="font-bold text-[#7a6b5d]">{item.l}:</span>{" "}
-                      <span className="font-semibold text-[#3d3530]">{item.v || "-"}{item.v ? ` ${item.u}` : ""}</span>
+                      <span className="font-bold text-slate-500">{item.l}:</span>{" "}
+                      <span className="font-semibold text-slate-900">{item.v || "-"}{item.v ? ` ${item.u}` : ""}</span>
                     </div>
                   ))}
                 </div>
@@ -243,21 +243,21 @@ export default function PrintView() {
             {/* Evaluation */}
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-[#8bb5c9]" />
-                <h3 className="text-xs font-bold text-[#3d3530] uppercase tracking-wider">2. Evaluacion Clinica</h3>
+                <div className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
+                <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">2. Evaluacion Clinica</h3>
               </div>
               <div className="space-y-2">
                 <div className="clay-inset p-3">
-                  <span className="text-[10px] font-bold text-[#7a6b5d] uppercase tracking-wider">Motivo de Consulta</span>
-                  <p className="text-sm text-[#3d3530] mt-1 min-h-[24px]">{consultation.consultationReason || "-"}</p>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Motivo de Consulta</span>
+                  <p className="text-sm text-slate-900 mt-1 min-h-[24px]">{consultation.consultationReason || "-"}</p>
                 </div>
                 <div className="clay-inset p-3">
-                  <span className="text-[10px] font-bold text-[#7a6b5d] uppercase tracking-wider">Historia de la Enfermedad</span>
-                  <p className="text-sm text-[#3d3530] mt-1 min-h-[40px]">{consultation.diseaseHistory || "-"}</p>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Historia de la Enfermedad</span>
+                  <p className="text-sm text-slate-900 mt-1 min-h-[40px]">{consultation.diseaseHistory || "-"}</p>
                 </div>
                 <div className="clay-inset p-3">
-                  <span className="text-[10px] font-bold text-[#7a6b5d] uppercase tracking-wider">Examen Fisico</span>
-                  <p className="text-sm text-[#3d3530] mt-1 min-h-[40px]">{consultation.physicalExam || "-"}</p>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Examen Fisico</span>
+                  <p className="text-sm text-slate-900 mt-1 min-h-[40px]">{consultation.physicalExam || "-"}</p>
                 </div>
               </div>
             </div>
@@ -266,24 +266,24 @@ export default function PrintView() {
             {consultation.diagnoses.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-[#8bc99a]" />
-                  <h3 className="text-xs font-bold text-[#3d3530] uppercase tracking-wider">3. Diagnostico</h3>
+                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">3. Diagnostico</h3>
                 </div>
                 <table className="w-full text-xs border-collapse">
                   <thead>
                     <tr>
-                      <th className="clay-inset px-3 py-2 text-left font-bold text-[#7a6b5d]">Codigo</th>
-                      <th className="clay-inset px-3 py-2 text-left font-bold text-[#7a6b5d]">Descripcion</th>
-                      <th className="clay-inset px-3 py-2 text-left font-bold text-[#7a6b5d]">Tipo</th>
+                      <th className="clay-inset px-3 py-2 text-left font-bold text-slate-500">Codigo</th>
+                      <th className="clay-inset px-3 py-2 text-left font-bold text-slate-500">Descripcion</th>
+                      <th className="clay-inset px-3 py-2 text-left font-bold text-slate-500">Tipo</th>
                     </tr>
                   </thead>
                   <tbody>
                     {consultation.diagnoses.map((d, i) => (
                       <tr key={i}>
-                        <td className="border-b border-[#c9b9a8]/30 px-3 py-2 font-mono font-bold text-[#8b6f5c]">{d.cie10Code}</td>
-                        <td className="border-b border-[#c9b9a8]/30 px-3 py-2">{d.description}</td>
-                        <td className="border-b border-[#c9b9a8]/30 px-3 py-2">
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-lg ${d.type === "DEFINITIVO" ? "bg-[#8bc99a]/30 text-[#4a7a55]" : "bg-[#c9b88b]/30 text-[#7a6a3a]"}`}>{d.type}</span>
+                        <td className="border-b border-slate-200 px-3 py-2 font-mono font-bold text-cyan-600">{d.cie10Code}</td>
+                        <td className="border-b border-slate-200 px-3 py-2">{d.description}</td>
+                        <td className="border-b border-slate-200 px-3 py-2">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-lg ${d.type === "DEFINITIVO" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>{d.type}</span>
                         </td>
                       </tr>
                     ))}
@@ -296,26 +296,26 @@ export default function PrintView() {
             {consultation.alternativeTreatments.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-[#b88bc9]" />
-                  <h3 className="text-xs font-bold text-[#3d3530] uppercase tracking-wider">4. Tratamiento Recomendado</h3>
+                  <div className="h-1.5 w-1.5 rounded-full bg-violet-400" />
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">4. Tratamiento Recomendado</h3>
                 </div>
                 <table className="w-full text-xs border-collapse">
                   <thead>
                     <tr>
                       {["Tratamiento", "Zona", "Frecuencia", "Sesiones", "Costo Sesion", "Costo Paquete"].map((h) => (
-                        <th key={h} className="clay-inset px-3 py-2 text-left font-bold text-[#7a6b5d]">{h}</th>
+                        <th key={h} className="clay-inset px-3 py-2 text-left font-bold text-slate-500">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {consultation.alternativeTreatments.map((t, i) => (
                       <tr key={i}>
-                        <td className="border-b border-[#c9b9a8]/30 px-3 py-2 font-medium">{t.treatmentName}</td>
-                        <td className="border-b border-[#c9b9a8]/30 px-3 py-2">{t.bodyZone || "-"}</td>
-                        <td className="border-b border-[#c9b9a8]/30 px-3 py-2">{t.frequency || "-"}</td>
-                        <td className="border-b border-[#c9b9a8]/30 px-3 py-2 text-center">{t.sessionsCount || "-"}</td>
-                        <td className="border-b border-[#c9b9a8]/30 px-3 py-2 text-right">{t.sessionPrice ? `S/ ${t.sessionPrice}` : "-"}</td>
-                        <td className="border-b border-[#c9b9a8]/30 px-3 py-2 text-right font-semibold">{t.packagePrice ? `S/ ${t.packagePrice}` : "-"}</td>
+                        <td className="border-b border-slate-200 px-3 py-2 font-medium">{t.treatmentName}</td>
+                        <td className="border-b border-slate-200 px-3 py-2">{t.bodyZone || "-"}</td>
+                        <td className="border-b border-slate-200 px-3 py-2">{t.frequency || "-"}</td>
+                        <td className="border-b border-slate-200 px-3 py-2 text-center">{t.sessionsCount || "-"}</td>
+                        <td className="border-b border-slate-200 px-3 py-2 text-right">{t.sessionPrice ? `S/ ${t.sessionPrice}` : "-"}</td>
+                        <td className="border-b border-slate-200 px-3 py-2 text-right font-semibold">{t.packagePrice ? `S/ ${t.packagePrice}` : "-"}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -326,13 +326,13 @@ export default function PrintView() {
             {/* Prescription */}
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-[#c9b88b]" />
-                <h3 className="text-xs font-bold text-[#3d3530] uppercase tracking-wider">5. Examenes y Receta Medica</h3>
+                <div className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">5. Examenes y Receta Medica</h3>
               </div>
               {consultation.labExamsRequested && (
                 <div className="clay-inset p-3 mb-2">
-                  <span className="text-[10px] font-bold text-[#7a6b5d] uppercase tracking-wider">Examenes Requeridos</span>
-                  <p className="text-sm text-[#3d3530] mt-1">{consultation.labExamsRequested}</p>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Examenes Requeridos</span>
+                  <p className="text-sm text-slate-900 mt-1">{consultation.labExamsRequested}</p>
                 </div>
               )}
               {consultation.prescriptions.length > 0 && (
@@ -340,17 +340,17 @@ export default function PrintView() {
                   <thead>
                     <tr>
                       {["Medicamento", "Dias", "Frecuencia", "Indicaciones"].map((h) => (
-                        <th key={h} className="clay-inset px-3 py-2 text-left font-bold text-[#7a6b5d]">{h}</th>
+                        <th key={h} className="clay-inset px-3 py-2 text-left font-bold text-slate-500">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {consultation.prescriptions.map((rx, i) => (
                       <tr key={i}>
-                        <td className="border-b border-[#c9b9a8]/30 px-3 py-2 font-bold">{rx.medication}</td>
-                        <td className="border-b border-[#c9b9a8]/30 px-3 py-2 text-center">{rx.days || "-"}</td>
-                        <td className="border-b border-[#c9b9a8]/30 px-3 py-2">{rx.dosage || "-"}</td>
-                        <td className="border-b border-[#c9b9a8]/30 px-3 py-2">{rx.instructions || "-"}</td>
+                        <td className="border-b border-slate-200 px-3 py-2 font-bold">{rx.medication}</td>
+                        <td className="border-b border-slate-200 px-3 py-2 text-center">{rx.days || "-"}</td>
+                        <td className="border-b border-slate-200 px-3 py-2">{rx.dosage || "-"}</td>
+                        <td className="border-b border-slate-200 px-3 py-2">{rx.instructions || "-"}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -362,8 +362,8 @@ export default function PrintView() {
             {consultation.recommendationsChecklist && (
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-[#c9a88b]" />
-                  <h3 className="text-xs font-bold text-[#3d3530] uppercase tracking-wider">6. Recomendaciones y Restricciones</h3>
+                  <div className="h-1.5 w-1.5 rounded-full bg-amber-300" />
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">6. Recomendaciones y Restricciones</h3>
                 </div>
                 <div className="grid grid-cols-2 gap-1.5 text-xs">
                   {[
@@ -375,7 +375,7 @@ export default function PrintView() {
                     { k: "noRedMeat", l: "No carne roja", a: consultation.recommendationsChecklist.noRedMeat },
                     { k: "useOrthopedicSupport", l: "Uso de faja/ortopedico", a: consultation.recommendationsChecklist.useOrthopedicSupport },
                   ].filter(r => r.a).map((r) => (
-                    <div key={r.k} className={`clay-inset px-3 py-2 rounded-xl text-[#7a4a4a]`}>
+                    <div key={r.k} className={`clay-inset px-3 py-2 rounded-xl text-red-700`}>
                       <span className="font-bold">X</span> {r.l}
                     </div>
                   ))}
@@ -384,14 +384,14 @@ export default function PrintView() {
                   <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
                     {consultation.treatmentDurationApprox && (
                       <div className="clay-inset px-3 py-2">
-                        <span className="font-bold text-[#8b6f5c]">Duracion: </span>
-                        <span className="text-[#3d3530]">{consultation.treatmentDurationApprox}</span>
+                        <span className="font-bold text-cyan-600">Duracion: </span>
+                        <span className="text-slate-900">{consultation.treatmentDurationApprox}</span>
                       </div>
                     )}
                     {consultation.improvementEstimate && (
                       <div className="clay-inset px-3 py-2">
-                        <span className="font-bold text-[#4a7a55]">Mejora: </span>
-                        <span className="text-[#3d3530]">{consultation.improvementEstimate}</span>
+                        <span className="font-bold text-emerald-600">Mejora: </span>
+                        <span className="text-slate-900">{consultation.improvementEstimate}</span>
                       </div>
                     )}
                   </div>
@@ -403,17 +403,17 @@ export default function PrintView() {
             {media.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-[#8b8bc9]" />
-                  <h3 className="text-xs font-bold text-[#3d3530] uppercase tracking-wider">7. Imagenes Adjuntas</h3>
+                  <div className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">7. Imagenes Adjuntas</h3>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   {media.map((item) => (
                     <div key={item.id} className="clay-inset p-2 rounded-xl">
-                      <div className="aspect-square rounded-lg overflow-hidden bg-[#e8e0d8] flex items-center justify-center">
+                      <div className="aspect-square rounded-lg overflow-hidden bg-slate-100 flex items-center justify-center">
                         <img src={item.data} alt={item.filename} className="w-full h-full object-contain" />
                       </div>
-                      {item.label && <p className="text-[10px] text-[#7a6b5d] mt-1 font-medium">{item.label}</p>}
-                      <p className="text-[10px] text-[#7a6b5d] truncate">{item.filename}</p>
+                      {item.label && <p className="text-[10px] text-slate-500 mt-1 font-medium">{item.label}</p>}
+                      <p className="text-[10px] text-slate-500 truncate">{item.filename}</p>
                     </div>
                   ))}
                 </div>
@@ -421,18 +421,18 @@ export default function PrintView() {
             )}
 
             {/* Signature */}
-            <div className="mt-8 pt-6 border-t-2 border-[#c9b9a8] flex justify-between items-end">
+            <div className="mt-8 pt-6 border-t-2 border-slate-200 flex justify-between items-end">
               <div className="max-w-md">
-                <p className="text-[10px] font-bold text-[#7a6b5d] uppercase tracking-wider mb-1">Comentarios del Doctor</p>
-                <p className="text-sm text-[#7a6b5d] italic">{consultation.doctorComments || "Sin comentarios adicionales"}</p>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Comentarios del Doctor</p>
+                <p className="text-sm text-slate-500 italic">{consultation.doctorComments || "Sin comentarios adicionales"}</p>
               </div>
               <div className="text-center w-56">
-                <div className="border-t-2 border-[#3d3530] pt-3">
-                  <p className="text-xs font-bold text-[#3d3530]">Firma y Sello del Medico</p>
+                <div className="border-t-2 border-slate-900 pt-3">
+                  <p className="text-xs font-bold text-slate-900">Firma y Sello del Medico</p>
                   <div className="mt-4 space-y-1">
-                    <p className="text-sm font-bold text-[#3d3530]">Dr. Admin</p>
-                    <p className="text-xs text-[#7a6b5d]">CMP: 12345</p>
-                    <p className="text-[10px] text-[#7a6b5d]">Medicina Integrativa</p>
+                    <p className="text-sm font-bold text-slate-900">Dr. Admin</p>
+                    <p className="text-xs text-slate-500">CMP: 12345</p>
+                    <p className="text-[10px] text-slate-500">Medicina Integrativa</p>
                   </div>
                 </div>
               </div>
@@ -441,7 +441,7 @@ export default function PrintView() {
 
           {/* Footer */}
           <div className="clay-inset mx-6 mb-6 px-6 py-3 rounded-xl print:mx-0 print:mb-0 print:rounded-none">
-            <div className="flex items-center justify-between text-[10px] text-[#7a6b5d]">
+            <div className="flex items-center justify-between text-[10px] text-slate-500">
               <span>MedIntegra - Sistema Clinico v1.0</span>
               <span>Documento generado electronicamente</span>
             </div>
