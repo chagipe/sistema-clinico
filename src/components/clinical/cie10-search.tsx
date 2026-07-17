@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Search } from "lucide-react";
@@ -23,6 +24,7 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
   const [results, setResults] = useState<Cie10Code[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 });
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -35,6 +37,7 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
         if (!response.ok) return;
         const data = await response.json();
         setResults(Array.isArray(data) ? data : []);
+        updateDropdownPos();
         setIsOpen(true);
       } catch (error) {
         console.error("Error searching CIE-10:", error);
@@ -56,6 +59,13 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const updateDropdownPos = () => {
+    if (inputRef.current) {
+      const rect = inputRef.current.getBoundingClientRect();
+      setDropdownPos({ top: rect.bottom + window.scrollY + 8, left: rect.left + window.scrollX, width: rect.width });
+    }
+  };
+
   const handleSelect = (code: Cie10Code) => {
     onSelect(code);
     setQuery("");
@@ -64,19 +74,63 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
     inputRef.current?.focus();
   };
 
+  const dropdown =
+    isOpen ? (
+      <div
+        className="fixed z-[9999] bg-white rounded-xl border border-slate-200 shadow-lg max-h-72 overflow-auto p-1"
+        style={{ top: dropdownPos.top, left: dropdownPos.left, width: dropdownPos.width }}
+      >
+        {results.map((code) => (
+          <button
+            key={code.id}
+            type="button"
+            className="w-full px-4 py-3 text-left hover:bg-slate-50 flex items-center justify-between rounded-lg transition-colors"
+            onClick={() => handleSelect(code)}
+          >
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-xs font-bold text-cyan-600 bg-cyan-50 px-2 py-1 rounded-lg">
+                {code.code}
+              </span>
+              <span className="text-sm text-slate-900">{code.description}</span>
+            </div>
+            {code.category && (
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-slate-100 text-slate-500">
+                {code.category}
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+    ) : null;
+
+  const emptyState =
+    isOpen && query.length >= 2 && results.length === 0 && !isLoading ? (
+      <div
+        className="fixed z-[9999] bg-white rounded-xl border border-slate-200 shadow-lg p-6 text-center"
+        style={{ top: dropdownPos.top, left: dropdownPos.left, width: dropdownPos.width }}
+      >
+        <p className="text-sm text-slate-500">No se encontraron resultados para &quot;{query}&quot;</p>
+      </div>
+    ) : null;
+
   return (
     <div className="space-y-3" ref={containerRef}>
       <div className="relative">
         <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Buscar Codigo CIE-10</Label>
         <div className="relative mt-1.5">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
           <Input
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onFocus={() => query.length >= 2 && results.length > 0 && setIsOpen(true)}
+            onFocus={() => {
+              if (query.length >= 2 && results.length > 0) {
+                updateDropdownPos();
+                setIsOpen(true);
+              }
+            }}
             placeholder="Buscar por codigo o descripcion (ej: M17, Gonartrosis...)"
-            className="clay-input h-11 pl-10 text-slate-900 placeholder:text-slate-400"
+            className="h-11 pl-10 pr-4 text-sm bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10 transition-all"
           />
           {isLoading && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -84,37 +138,9 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
             </div>
           )}
         </div>
-        
-        {isOpen && results.length > 0 && (
-          <div className="absolute z-50 w-full mt-2 clay-card max-h-72 overflow-auto p-1">
-            {results.map((code) => (
-              <button
-                key={code.id}
-                className="w-full px-4 py-3 text-left hover:bg-white/50 flex items-center justify-between rounded-xl transition-colors"
-                onClick={() => handleSelect(code)}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs font-bold text-cyan-600 clay-inset px-2 py-1 rounded-lg">
-                    {code.code}
-                  </span>
-                  <span className="text-sm text-slate-900">{code.description}</span>
-                </div>
-                {code.category && (
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-slate-100 text-slate-500">
-                    {code.category}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {isOpen && query.length >= 2 && results.length === 0 && !isLoading && (
-          <div className="absolute z-50 w-full mt-2 clay-card p-6 text-center">
-            <p className="text-sm text-slate-500">No se encontraron resultados para "{query}"</p>
-          </div>
-        )}
       </div>
+      {createPortal(dropdown, document.body)}
+      {createPortal(emptyState, document.body)}
     </div>
   );
 }
