@@ -51,7 +51,7 @@ export function VitalsForm({ form }: VitalsFormProps) {
             }
             {...form.register(
               `vitals.${field.id}` as any,
-              field.type === "number" && !field.readOnly ? { valueAsNumber: true } : {}
+              field.type === "number" ? { valueAsNumber: true } : {}
             )}
           />
         </div>
