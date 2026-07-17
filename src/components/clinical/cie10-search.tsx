@@ -26,6 +26,7 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 });
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const searchCie10 = async () => {
@@ -50,7 +51,11 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (
+        containerRef.current && !containerRef.current.contains(target) &&
+        dropdownRef.current && !dropdownRef.current.contains(target)
+      ) {
         setIsOpen(false);
       }
     };
@@ -76,6 +81,7 @@ export function Cie10Search({ onSelect, selectedCodes = [], onRemove }: Cie10Sea
   const dropdown =
     isOpen ? (
       <div
+        ref={dropdownRef}
         className="fixed z-[9999] bg-white rounded-xl border border-slate-200 shadow-lg max-h-72 overflow-auto p-1"
         style={{ top: dropdownPos.top, left: dropdownPos.left, width: dropdownPos.width }}
       >
