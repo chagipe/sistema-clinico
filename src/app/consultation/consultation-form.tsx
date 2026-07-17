@@ -23,6 +23,7 @@ import { TreatmentTable } from "@/components/clinical/treatment-table";
 import { PrescriptionTable } from "@/components/clinical/prescription-table";
 import { RecommendationsChecklist } from "@/components/clinical/recommendations-checklist";
 import { ImageUpload } from "@/components/clinical/image-upload";
+import { EvaPainScale } from "@/components/clinical/eva-pain-scale";
 import { TopBar } from "@/components/layout/top-bar";
 import {
   ArrowLeft,
@@ -54,6 +55,7 @@ const consultationSchema = z.object({
   labExamsRequested: z.string().optional(),
   treatmentDurationApprox: z.string().optional(),
   improvementEstimate: z.string().optional(),
+  painScale: z.number().min(0).max(10).optional(),
   doctorComments: z.string().optional(),
   vitals: z.object({
     bloodPressure: z.string().optional(),
@@ -179,6 +181,7 @@ export default function ConsultationForm() {
       patientId: patientId || "",
       type: "NUEVA",
       hasAccidentsOps: false,
+      painScale: undefined,
       diagnoses: [],
       alternativeTreatments: [],
       prescriptions: [],
@@ -396,7 +399,15 @@ export default function ConsultationForm() {
 
           {/* Section 1: Vitals */}
           <SectionPanel title="Triaje y Funciones Vitales" subtitle="Presion arterial, frecuencias, peso y talla" icon={Heart} iconBg="bg-red-500" badge="Vitales">
-            <VitalsForm form={form} />
+            <div className="space-y-5">
+              <VitalsForm form={form} />
+              <div className="pt-4 border-t border-slate-200">
+                <EvaPainScale
+                  value={form.watch("painScale")}
+                  onChange={(val) => form.setValue("painScale", val)}
+                />
+              </div>
+            </div>
           </SectionPanel>
 
           {/* Section 2: Clinical Evaluation */}

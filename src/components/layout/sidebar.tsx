@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   Users,
-  FileText,
   Settings,
   LogOut,
   HeartPulse,
@@ -24,7 +23,6 @@ const navigation = [
       { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
       { name: "Pacientes", href: "/pacientes", icon: Users },
       { name: "Consultas", href: "/consultas", icon: Stethoscope },
-      { name: "Historias", href: "/historias", icon: FileText },
     ],
   },
   {

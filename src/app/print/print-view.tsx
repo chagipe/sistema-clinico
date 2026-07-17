@@ -20,6 +20,7 @@ interface ConsultationData {
   treatmentDurationApprox?: string;
   improvementEstimate?: string;
   doctorComments?: string;
+  painScale?: number;
   createdAt: string;
   patient: {
     id: string;
@@ -232,6 +233,7 @@ export default function PrintView() {
                     { l: "Talla", v: vitals.heightCm, u: "cm" },
                     { l: "IMC", v: vitals.bmi, u: "" },
                     { l: "Temp", v: vitals.temperature, u: "C" },
+                    ...(consultation.painScale != null ? [{ l: "EVA", v: `${consultation.painScale}/10`, u: "" }] : []),
                   ].map((item) => (
                     <div key={item.l} className="clay-inset px-3 py-2">
                       <span className="font-bold text-slate-500">{item.l}:</span>{" "}

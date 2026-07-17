@@ -1,11 +1,9 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { TopBar } from "@/components/layout/top-bar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TopBar } from "@/components/layout/top-bar";
 import {
   Select,
   SelectContent,
@@ -13,16 +11,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { PatientDetailDrawer } from "@/components/clinical/patient-detail-drawer";
+import { EvaPainScale } from "@/components/clinical/eva-pain-scale";
 import {
   Users,
   Plus,
   Search,
-  ChevronRight,
   Phone,
   Calendar,
   FileText,
   X,
   Trash2,
+  Syringe,
+  ClipboardCheck,
+  Clock,
 } from "lucide-react";
 import { calculateAge, cn } from "@/lib/utils";
 
@@ -39,17 +41,29 @@ interface Patient {
     type: string;
     status: string;
     createdAt: string;
+    painScale?: number | null;
+    diagnoses: Array<{ cie10Code: string; description: string }>;
+  }>;
+  treatmentPackages: Array<{
+    id: string;
+    treatmentName: string;
+    bodyZone?: string | null;
+    totalSessions: number;
+    status: string;
+    createdAt: string;
+    sessions: Array<{ id: string; sessionNumber: number; sessionDate: string }>;
   }>;
 }
 
 export default function PacientesContent() {
-  const searchParams = useSearchParams();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+  const [searchQuery, setSearchQuery] = useState("");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const deleteDialogRef = useRef<HTMLDialogElement>(null);
   const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null);
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [newPatient, setNewPatient] = useState({
     dni: "",
     firstName: "",
@@ -123,9 +137,26 @@ export default function PacientesContent() {
     );
   });
 
-  const getLastConsultationType = (consultations: Patient["consultations"]) => {
-    if (consultations.length === 0) return null;
-    return consultations[0].type;
+  const handleOpenPatient = (patient: Patient) => {
+    setSelectedPatient(patient);
+    setDrawerOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawerOpen(false);
+    setSelectedPatient(null);
+    fetchPatients();
+  };
+
+  const getPatientStatus = (patient: Patient) => {
+    const activePackages = patient.treatmentPackages.filter((p) => p.status === "ACTIVO");
+    if (activePackages.length > 0) return "EN_TRATAMIENTO";
+    if (patient.consultations.length > 0) return "CON_CONSULTAS";
+    return "NUEVO";
+  };
+
+  const lastConsultation = (patient: Patient) => {
+    return patient.consultations[0] || null;
   };
 
   return (
@@ -144,6 +175,7 @@ export default function PacientesContent() {
         }
       />
 
+      {/* New Patient Dialog */}
       <dialog
         ref={dialogRef}
         className="m-auto backdrop:bg-black/50 backdrop-blur-sm rounded-2xl p-0 border-0 max-w-[500px] w-full"
@@ -240,6 +272,7 @@ export default function PacientesContent() {
         </div>
       </dialog>
 
+      {/* Delete Confirmation Dialog */}
       <dialog
         ref={deleteDialogRef}
         className="m-auto backdrop:bg-black/50 backdrop-blur-sm rounded-2xl p-0 border-0 max-w-[400px] w-full"
@@ -278,6 +311,15 @@ export default function PacientesContent() {
           </div>
         </div>
       </dialog>
+
+      {/* Patient Detail Drawer */}
+      {selectedPatient && (
+        <PatientDetailDrawer
+          patient={selectedPatient}
+          open={drawerOpen}
+          onClose={handleCloseDrawer}
+        />
+      )}
 
       <div className="flex-1 p-6 space-y-6 overflow-y-auto">
         {/* Search */}
@@ -321,19 +363,34 @@ export default function PacientesContent() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {filteredPatients.map((patient) => {
-                  const lastType = getLastConsultationType(patient.consultations);
+                  const status = getPatientStatus(patient);
+                  const last = lastConsultation(patient);
+                  const activePackages = patient.treatmentPackages.filter((p) => p.status === "ACTIVO");
+
                   return (
-                    <div key={patient.id} className="flex items-center justify-between p-4 rounded-xl transition-all duration-150 group hover:bg-slate-50 border border-transparent hover:border-slate-200">
-                      <Link href={`/consultation?patientId=${patient.id}`} className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer">
+                    <div
+                      key={patient.id}
+                      onClick={() => handleOpenPatient(patient)}
+                      className="flex items-center justify-between p-4 rounded-xl transition-all duration-150 group hover:bg-slate-50 border border-transparent hover:border-slate-200 cursor-pointer"
+                    >
+                      <div className="flex items-center gap-4 flex-1 min-w-0">
                         <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
                           {patient.firstName.charAt(0)}{patient.lastName.charAt(0)}
                         </div>
                         <div className="min-w-0">
-                          <h4 className="font-semibold text-slate-900">
-                            {patient.firstName} {patient.lastName}
-                          </h4>
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-semibold text-slate-900">
+                              {patient.firstName} {patient.lastName}
+                            </h4>
+                            {status === "EN_TRATAMIENTO" && (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-cyan-100 text-cyan-700">
+                                <Syringe className="h-2.5 w-2.5" />
+                                En Tratamiento
+                              </span>
+                            )}
+                          </div>
                           <div className="flex items-center gap-3 mt-1 text-sm text-slate-500">
                             <span className="flex items-center gap-1">
                               <FileText className="h-3 w-3" />
@@ -350,24 +407,38 @@ export default function PacientesContent() {
                               </span>
                             )}
                           </div>
+                          {last && (
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-xs text-slate-400 flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                {last.type} - {new Date(last.createdAt).toLocaleDateString("es-PE")}
+                              </span>
+                              {last.painScale != null && (
+                                <span className={cn(
+                                  "text-[10px] font-bold px-1.5 py-0.5 rounded",
+                                  last.painScale <= 3 ? "bg-emerald-100 text-emerald-700" :
+                                  last.painScale <= 6 ? "bg-amber-100 text-amber-700" :
+                                  "bg-red-100 text-red-700"
+                                )}>
+                                  EVA: {last.painScale}
+                                </span>
+                              )}
+                            </div>
+                          )}
                         </div>
-                      </Link>
+                      </div>
                       <div className="flex items-center gap-3 shrink-0">
-                        {lastType && (
-                          <span className={cn(
-                            "text-[10px] font-semibold px-2 py-0.5 rounded-md",
-                            lastType === "NUEVA"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : lastType === "RECONSULTA"
-                              ? "bg-cyan-100 text-cyan-700"
-                              : "bg-amber-100 text-amber-700"
-                          )}>
-                            {lastType}
-                          </span>
-                        )}
+                        <div className="text-right">
+                          <span className="text-xs text-slate-400">{patient.consultations.length} consulta{patient.consultations.length !== 1 ? "s" : ""}</span>
+                          {activePackages.length > 0 && (
+                            <p className="text-[10px] text-cyan-600 font-medium">
+                              {activePackages.length} paquete{activePackages.length > 1 ? "s" : ""}
+                            </p>
+                          )}
+                        </div>
                         <button
                           onClick={(e) => {
-                            e.preventDefault();
+                            e.stopPropagation();
                             setPatientToDelete(patient);
                             deleteDialogRef.current?.showModal();
                           }}
@@ -376,7 +447,6 @@ export default function PacientesContent() {
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
-                        <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-slate-600 group-hover:translate-x-0.5 transition-all" />
                       </div>
                     </div>
                   );

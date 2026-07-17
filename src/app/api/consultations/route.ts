@@ -14,6 +14,7 @@ const consultationSchema = z.object({
   labExamsRequested: z.string().optional(),
   treatmentDurationApprox: z.string().optional(),
   improvementEstimate: z.string().optional(),
+  painScale: z.number().min(0).max(10).optional(),
   doctorComments: z.string().optional(),
   vitals: z
     .object({

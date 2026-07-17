@@ -54,6 +54,7 @@ model Consultation {
   labExamsRequested        String?          @map("lab_exams_requested") @db.Text
   treatmentDurationApprox  String?          @map("treatment_duration_approx") @db.VarChar(200)
   improvementEstimate      String?          @map("improvement_estimate") @db.VarChar(200)
+  painScale                Int?             @map("pain_scale")
   doctorComments           String?          @map("doctor_comments") @db.Text
   createdAt                DateTime         @default(now()) @map("created_at")
 

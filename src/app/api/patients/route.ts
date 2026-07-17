@@ -22,9 +22,24 @@ export async function GET() {
             type: true,
             status: true,
             createdAt: true,
+            painScale: true,
+            diagnoses: {
+              select: { cie10Code: true, description: true },
+            },
           },
           orderBy: { createdAt: "desc" },
-          take: 1,
+        },
+        treatmentPackages: {
+          select: {
+            id: true,
+            treatmentName: true,
+            bodyZone: true,
+            totalSessions: true,
+            status: true,
+            createdAt: true,
+            sessions: { select: { id: true, sessionNumber: true, sessionDate: true } },
+          },
+          orderBy: { createdAt: "desc" },
         },
       },
     });
