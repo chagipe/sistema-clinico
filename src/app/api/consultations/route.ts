@@ -80,8 +80,42 @@ const consultationSchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
     const type = searchParams.get("type");
     const status = searchParams.get("status");
+
+    if (id) {
+      const consultation = await prisma.consultation.findUnique({
+        where: { id },
+        include: {
+          patient: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              dni: true,
+              birthDate: true,
+              gender: true,
+            },
+          },
+          vitals: true,
+          diagnoses: true,
+          alternativeTreatments: true,
+          prescriptions: true,
+          recommendationsChecklist: true,
+          media: true,
+        },
+      });
+
+      if (!consultation) {
+        return NextResponse.json(
+          { error: "Consultation not found" },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json(consultation);
+    }
 
     const where: any = {};
     if (type) where.type = type;
@@ -97,6 +131,7 @@ export async function GET(request: NextRequest) {
             lastName: true,
             dni: true,
             birthDate: true,
+            gender: true,
           },
         },
         vitals: true,
@@ -104,6 +139,7 @@ export async function GET(request: NextRequest) {
         alternativeTreatments: true,
         prescriptions: true,
         recommendationsChecklist: true,
+        media: true,
       },
       orderBy: { createdAt: "desc" },
     });

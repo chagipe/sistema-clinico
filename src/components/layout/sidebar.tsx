@@ -14,6 +14,7 @@ import {
   Activity,
   ClipboardCheck,
   ShieldCheck,
+  FileText,
 } from "lucide-react";
 
 const navigation = [
@@ -23,6 +24,7 @@ const navigation = [
       { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
       { name: "Pacientes", href: "/pacientes", icon: Users },
       { name: "Consultas", href: "/consultas", icon: Stethoscope },
+      { name: "Historias", href: "/historias", icon: FileText },
     ],
   },
   {

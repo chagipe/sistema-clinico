@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Printer, ArrowLeft, HeartPulse, Image as ImageIcon } from "lucide-react";
 import { calculateAge, formatDateTime } from "@/lib/utils";
 import Link from "next/link";
@@ -61,40 +61,45 @@ interface MediaItem {
 
 export default function PrintView() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const consultationId = searchParams.get("id");
   const [consultation, setConsultation] = useState<ConsultationData | null>(null);
   const [media, setMedia] = useState<MediaItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (consultationId) {
-      fetchConsultation(consultationId);
-      fetchMedia(consultationId);
+    if (!consultationId) {
+      setIsLoading(false);
+      setError("No se proporciono un ID de consulta.");
+      return;
     }
+    fetchConsultation(consultationId);
   }, [consultationId]);
 
   const fetchConsultation = async (id: string) => {
     try {
       const response = await fetch(`/api/consultations?id=${id}`);
-      if (!response.ok) { setIsLoading(false); return; }
+      if (response.status === 404) {
+        setError("Consulta no encontrada");
+        setIsLoading(false);
+        return;
+      }
+      if (!response.ok) {
+        setError("Error al cargar la consulta.");
+        setIsLoading(false);
+        return;
+      }
       const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) setConsultation(data[0]);
-    } catch (error) {
-      console.error("Error fetching consultation:", error);
+      setConsultation(data);
+      if (data.media && Array.isArray(data.media)) {
+        setMedia(data.media);
+      }
+    } catch (err) {
+      console.error("Error fetching consultation:", err);
+      setError("Error de conexion al cargar la consulta.");
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const fetchMedia = async (consultationId: string) => {
-    try {
-      const response = await fetch(`/api/media?consultationId=${consultationId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setMedia(data);
-      }
-    } catch (error) {
-      console.error("Error fetching media:", error);
     }
   };
 
@@ -114,7 +119,7 @@ export default function PrintView() {
     );
   }
 
-  if (!consultation) {
+  if (error || !consultation) {
     return (
       <div className="flex flex-col h-full">
         <TopBar title="Consulta no encontrada" />
@@ -124,12 +129,23 @@ export default function PrintView() {
               <Printer className="h-8 w-8 text-slate-500" />
             </div>
             <h2 className="text-lg font-bold text-slate-900 mb-2">Consulta no encontrada</h2>
-            <p className="text-sm text-slate-500 mb-4">No se encontro la consulta solicitada</p>
-            <Link href="/dashboard">
-              <button className="clay-button-primary px-4 py-2.5 text-sm font-semibold flex items-center gap-2 mx-auto">
-                <ArrowLeft className="h-4 w-4" /> Volver
-              </button>
-            </Link>
+            <p className="text-sm text-slate-500 mb-4">
+              {error === "Consulta no encontrada" 
+                ? "No se encontro la consulta solicitada. Verifique que el enlace sea correcto."
+                : error || "No se encontro la consulta solicitada."}
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              <Link href="/pacientes">
+                <button className="clay-button px-4 py-2.5 text-sm font-semibold flex items-center gap-2">
+                  <ArrowLeft className="h-4 w-4" /> Ver Pacientes
+                </button>
+              </Link>
+              <Link href="/dashboard">
+                <button className="clay-button-primary px-4 py-2.5 text-sm font-semibold flex items-center gap-2">
+                  Ir al Inicio
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

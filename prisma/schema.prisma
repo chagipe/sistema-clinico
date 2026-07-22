@@ -32,6 +32,31 @@ model Patient {
   birthDate   DateTime @map("birth_date") @db.Date
   gender      String   @db.VarChar(20)
   phone       String?  @db.VarChar(20)
+  occupation  String?  @map("occupation") @db.VarChar(100)
+  maritalStatus String? @map("marital_status") @db.VarChar(50)
+  address     String?  @db.VarChar(500)
+  
+  // Antecedentes Heredofamiliares
+  familyHistoryDiabetes    Boolean @default(false) @map("family_history_diabetes")
+  familyHistoryHypertension Boolean @default(false) @map("family_history_hypertension")
+  familyHistoryCancer      Boolean @default(false) @map("family_history_cancer")
+  familyHistoryHeartDisease Boolean @default(false) @map("family_history_heart_disease")
+  familyHistoryKidneyDisease Boolean @default(false) @map("family_history_kidney_disease")
+  familyHistoryOther       String? @map("family_history_other") @db.VarChar(500)
+  
+  // Antecedentes Personales Patologicos
+  personalAllergies        String? @map("personal_allergies") @db.Text
+  personalSurgeries        String? @map("personal_surgeries") @db.Text
+  personalHospitalizations String? @map("personal_hospitalizations") @db.Text
+  personalTransfusions     String? @map("personal_transfusions") @db.Text
+  personalTrauma           String? @map("personal_trauma") @db.Text
+  
+  // Antecedentes No Patologicos
+  smoking    Boolean @default(false) @map("smoking")
+  alcohol    Boolean @default(false) @map("alcohol")
+  bloodType  String? @map("blood_type") @db.VarChar(10)
+  habits     String? @map("habits") @db.Text
+  
   createdAt   DateTime @default(now()) @map("created_at")
 
   consultations    Consultation[]

@@ -157,9 +157,11 @@ export default function ConsultasPage() {
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <h4 className="font-semibold text-slate-900">
-                              {consultation.patient.firstName} {consultation.patient.lastName}
-                            </h4>
+                            <Link href={`/pacientes/${consultation.patient.id}`} onClick={(e) => e.stopPropagation()} className="hover:underline">
+                              <h4 className="font-semibold text-slate-900">
+                                {consultation.patient.firstName} {consultation.patient.lastName}
+                              </h4>
+                            </Link>
                             <span className="text-[10px] font-bold text-slate-500">
                               #{consultation.id.slice(0, 8).toUpperCase()}
                             </span>

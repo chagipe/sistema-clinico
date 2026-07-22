@@ -40,6 +40,9 @@ import {
   Paperclip,
   ChevronDown,
   ChevronUp,
+  Search,
+  User,
+  Calendar,
 } from "lucide-react";
 import { calculateAge, cn } from "@/lib/utils";
 import Link from "next/link";
@@ -111,6 +114,28 @@ interface Patient {
   lastName: string;
   birthDate: string;
   gender: string;
+  phone?: string | null;
+  occupation?: string | null;
+  maritalStatus?: string | null;
+  address?: string | null;
+  // Antecedentes Heredofamiliares
+  familyHistoryDiabetes?: boolean;
+  familyHistoryHypertension?: boolean;
+  familyHistoryCancer?: boolean;
+  familyHistoryHeartDisease?: boolean;
+  familyHistoryKidneyDisease?: boolean;
+  familyHistoryOther?: string | null;
+  // Antecedentes Personales Patologicos
+  personalAllergies?: string | null;
+  personalSurgeries?: string | null;
+  personalHospitalizations?: string | null;
+  personalTransfusions?: string | null;
+  personalTrauma?: string | null;
+  // Antecedentes No Patologicos
+  smoking?: boolean;
+  alcohol?: boolean;
+  bloodType?: string | null;
+  habits?: string | null;
 }
 
 interface SectionPanelProps {
@@ -175,6 +200,10 @@ export default function ConsultationForm() {
     Array<{ id?: string; filename: string; mimeType: string; data: string; label?: string | null }>
   >([]);
 
+  const [allPatients, setAllPatients] = useState<Patient[]>([]);
+  const [patientSearchQuery, setPatientSearchQuery] = useState("");
+  const [isLoadingPatients, setIsLoadingPatients] = useState(false);
+
   const form = useForm<FormData>({
     resolver: zodResolver(consultationSchema),
     defaultValues: {
@@ -195,8 +224,42 @@ export default function ConsultationForm() {
   });
 
   useEffect(() => {
-    if (patientId) fetchPatient(patientId);
+    if (patientId) {
+      fetchPatient(patientId);
+    } else {
+      fetchAllPatients();
+    }
   }, [patientId]);
+
+  const fetchAllPatients = async () => {
+    setIsLoadingPatients(true);
+    try {
+      const response = await fetch("/api/patients");
+      if (!response.ok) { setIsLoadingPatients(false); return; }
+      const data = await response.json();
+      setAllPatients(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Error fetching patients:", error);
+    } finally {
+      setIsLoadingPatients(false);
+      setIsLoading(false);
+    }
+  };
+
+  const filteredPatients = allPatients.filter((p) => {
+    const q = patientSearchQuery.toLowerCase();
+    return (
+      p.firstName.toLowerCase().includes(q) ||
+      p.lastName.toLowerCase().includes(q) ||
+      p.dni.includes(q)
+    );
+  });
+
+  const handleSelectPatient = (selectedPatient: Patient) => {
+    setPatient(selectedPatient);
+    form.setValue("patientId", selectedPatient.id);
+    setPatientSearchQuery("");
+  };
 
   const fetchPatient = async (id: string) => {
     try {
@@ -227,36 +290,58 @@ export default function ConsultationForm() {
   };
 
   const onSubmit = async (data: FormData) => {
+    if (!data.patientId) {
+      alert("Error: No se ha seleccionado un paciente.");
+      return;
+    }
     setIsSaving(true);
     try {
+      const payload = {
+        ...data,
+        consultationReason: data.consultationReason ?? "",
+        diseaseHistory: data.diseaseHistory ?? "",
+        allergies: data.allergies ?? "",
+        physicalExam: data.physicalExam ?? "",
+        labExamsRequested: data.labExamsRequested ?? "",
+        treatmentDurationApprox: data.treatmentDurationApprox ?? "",
+        improvementEstimate: data.improvementEstimate ?? "",
+        doctorComments: data.doctorComments ?? "",
+        diagnoses,
+      };
       const response = await fetch("/api/consultations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, diagnoses }),
+        body: JSON.stringify(payload),
       });
-      if (response.ok) {
-        const result = await response.json();
-
-        for (const image of images) {
-          if (!image.id) {
-            await fetch("/api/media", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                consultationId: result.id,
-                filename: image.filename,
-                mimeType: image.mimeType,
-                data: image.data,
-                label: image.label,
-              }),
-            });
-          }
-        }
-
-        router.push(`/print?id=${result.id}`);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error("API error:", response.status, errorData);
+        alert("Error al guardar la consulta: " + (errorData.error || "Error desconocido"));
+        return;
       }
+      const result = await response.json();
+
+      for (const image of images) {
+        if (!image.id) {
+          await fetch("/api/media", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              consultationId: result.id,
+              filename: image.filename,
+              mimeType: image.mimeType,
+              data: image.data,
+              label: image.label,
+            }),
+          });
+        }
+      }
+
+      alert("Historia clinica registrada correctamente");
+      router.push(`/pacientes/${patientId}`);
     } catch (error) {
       console.error("Error saving consultation:", error);
+      alert("Error de conexion al guardar la consulta.");
     } finally {
       setIsSaving(false);
     }
@@ -279,18 +364,81 @@ export default function ConsultationForm() {
   if (!patient) {
     return (
       <div className="flex flex-col h-full">
-        <TopBar title="Paciente no encontrado" />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="clay-card p-8 text-center">
-            <div className="clay-inset h-16 w-16 flex items-center justify-center mx-auto mb-4">
-              <AlertTriangle className="h-8 w-8 text-red-500" />
+        <TopBar title="Seleccionar Paciente" subtitle="Busca y selecciona un paciente para crear una historia clinica" />
+        <div className="flex-1 p-6 overflow-y-auto">
+          <div className="max-w-2xl mx-auto space-y-6">
+            <div className="bg-white rounded-xl border border-slate-200 p-6">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center shadow-md">
+                  <User className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-slate-900">Seleccionar Paciente</h2>
+                  <p className="text-sm text-slate-500">Selecciona un paciente existente para continuar</p>
+                </div>
+              </div>
+
+              <div className="relative mb-4">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                <input
+                  type="text"
+                  value={patientSearchQuery}
+                  onChange={(e) => setPatientSearchQuery(e.target.value)}
+                  placeholder="Buscar por nombre, apellido o DNI..."
+                  autoFocus
+                  className="w-full pl-10 pr-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10 transition-all"
+                />
+              </div>
+
+              {isLoadingPatients ? (
+                <div className="py-8 text-center">
+                  <div className="h-8 w-8 border-4 border-slate-200 border-t-cyan-500 rounded-full animate-spin mx-auto mb-3" />
+                  <p className="text-sm text-slate-500">Cargando pacientes...</p>
+                </div>
+              ) : filteredPatients.length === 0 ? (
+                <div className="py-8 text-center">
+                  <p className="text-sm text-slate-500">
+                    {patientSearchQuery ? "No se encontraron pacientes" : "No hay pacientes registrados"}
+                  </p>
+                </div>
+              ) : (
+                <div className="max-h-[400px] overflow-y-auto space-y-2">
+                  {filteredPatients.map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => handleSelectPatient(p)}
+                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-cyan-300 hover:bg-cyan-50/50 transition-all text-left"
+                    >
+                      <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center text-white font-bold text-sm shadow-md shrink-0">
+                        {p.firstName.charAt(0)}{p.lastName.charAt(0)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-slate-900 truncate">
+                          {p.firstName} {p.lastName}
+                        </h4>
+                        <div className="flex items-center gap-3 mt-0.5 text-sm text-slate-500">
+                          <span className="flex items-center gap-1">
+                            <User className="h-3 w-3" />
+                            DNI: {p.dni}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            {calculateAge(new Date(p.birthDate))} anios
+                          </span>
+                        </div>
+                      </div>
+                      <span className="text-xs font-semibold text-cyan-600">Seleccionar</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-            <h2 className="text-lg font-bold text-slate-900 mb-2">Paciente no encontrado</h2>
-            <p className="text-sm text-slate-500 mb-4">No se encontro el paciente solicitado</p>
-            <Link href="/dashboard">
-              <button className="clay-button-primary px-4 py-2.5 text-sm font-semibold flex items-center gap-2 mx-auto">
+
+            <Link href="/pacientes">
+              <button type="button" className="clay-button px-4 py-2.5 text-sm font-semibold text-slate-900 flex items-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
-                Volver al Dashboard
+                Volver a Pacientes
               </button>
             </Link>
           </div>
@@ -328,6 +476,59 @@ export default function ConsultationForm() {
 
       <div className="flex-1 p-6 overflow-y-auto">
         <form onSubmit={form.handleSubmit(onSubmit)} onKeyDown={(e) => { if (e.key === "Enter" && e.target instanceof HTMLInputElement && e.target.type !== "submit") e.preventDefault(); }} className="space-y-5 max-w-5xl mx-auto">
+          {/* Patient Summary - Read Only */}
+          <div className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl border border-cyan-200 p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <User className="h-4 w-4 text-cyan-600" />
+              <h3 className="text-sm font-bold text-cyan-800 uppercase tracking-wider">Resumen del Paciente</h3>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div>
+                <span className="text-[10px] font-bold text-cyan-600 uppercase">Alergias</span>
+                <p className="text-slate-900 font-medium mt-0.5">
+                  {patient.personalAllergies || "Ninguna registrada"}
+                </p>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-cyan-600 uppercase">Cirugias/Operaciones</span>
+                <p className="text-slate-900 font-medium mt-0.5">
+                  {patient.personalSurgeries || "Ninguna registrada"}
+                </p>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-cyan-600 uppercase">Tipo de Sangre</span>
+                <p className="text-slate-900 font-medium mt-0.5">
+                  {patient.bloodType || "No especificado"}
+                </p>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-cyan-600 uppercase">Habitos</span>
+                <p className="text-slate-900 font-medium mt-0.5">
+                  {[
+                    patient.smoking ? "Tabaquismo" : "",
+                    patient.alcohol ? "Alcoholismo" : "",
+                    patient.habits || ""
+                  ].filter(Boolean).join(", ") || "No especificado"}
+                </p>
+              </div>
+            </div>
+            {(patient.familyHistoryDiabetes || patient.familyHistoryHypertension || patient.familyHistoryCancer || patient.familyHistoryHeartDisease || patient.familyHistoryKidneyDisease || patient.familyHistoryOther) && (
+              <div className="mt-3 pt-3 border-t border-cyan-200">
+                <span className="text-[10px] font-bold text-cyan-600 uppercase">Antecedentes Familiares: </span>
+                <span className="text-sm text-slate-900">
+                  {[
+                    patient.familyHistoryDiabetes ? "Diabetes" : "",
+                    patient.familyHistoryHypertension ? "Hipertension" : "",
+                    patient.familyHistoryCancer ? "Cancer" : "",
+                    patient.familyHistoryHeartDisease ? "Cardiopatias" : "",
+                    patient.familyHistoryKidneyDisease ? "Nefropatias" : "",
+                    patient.familyHistoryOther || ""
+                  ].filter(Boolean).join(", ")}
+                </span>
+              </div>
+            )}
+          </div>
+
           {/* Patient Header */}
           <div className="clay-card p-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
@@ -368,7 +569,7 @@ export default function ConsultationForm() {
                   <SelectTrigger className="clay-input h-11 text-slate-900">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="clay-card border-0">
+                  <SelectContent className="clay-card border-0 z-[9999]">
                     <SelectItem value="NUEVA">Nueva Consulta</SelectItem>
                     <SelectItem value="RECONSULTA">Reconsulta</SelectItem>
                     <SelectItem value="TRATAMIENTO">Tratamiento</SelectItem>
@@ -505,7 +706,7 @@ export default function ConsultationForm() {
 
           {/* Submit */}
           <div className="flex justify-end gap-3 pb-8 pt-2">
-            <button type="button" onClick={() => router.push("/dashboard")} className="clay-button px-5 py-2.5 text-sm font-semibold text-slate-900">
+            <button type="button" onClick={() => patientId ? router.push(`/pacientes/${patientId}`) : router.push("/dashboard")} className="clay-button px-5 py-2.5 text-sm font-semibold text-slate-900">
               Cancelar
             </button>
             <button type="submit" disabled={isSaving} className="clay-button-primary px-6 py-2.5 text-sm font-semibold flex items-center gap-2">

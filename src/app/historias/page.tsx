@@ -11,6 +11,7 @@ import {
   Calendar,
   ChevronRight,
   Eye,
+  Plus,
 } from "lucide-react";
 import { formatDateTime, cn } from "@/lib/utils";
 
@@ -68,6 +69,14 @@ export default function HistoriasPage() {
         title="Historias Clinicas"
         subtitle="Fichas clinicas para ver e imprimir"
         showSearch={false}
+        actions={
+          <Link href="/consultas/nueva">
+            <button className="clay-button-primary px-4 py-2 text-sm font-semibold flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              Nueva Historia Clinica
+            </button>
+          </Link>
+        }
       />
 
       <div className="flex-1 p-6 space-y-6 overflow-y-auto">
@@ -124,9 +133,11 @@ export default function HistoriasPage() {
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h4 className="font-semibold text-slate-900">
-                            {consultation.patient.firstName} {consultation.patient.lastName}
-                          </h4>
+                          <Link href={`/pacientes/${consultation.patient.id}`} className="hover:underline">
+                            <h4 className="font-semibold text-slate-900">
+                              {consultation.patient.firstName} {consultation.patient.lastName}
+                            </h4>
+                          </Link>
                           <span className="text-[10px] font-bold text-slate-500">
                             #{consultation.id.slice(0, 8).toUpperCase()}
                           </span>

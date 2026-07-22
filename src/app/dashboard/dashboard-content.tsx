@@ -91,7 +91,7 @@ export default function DashboardContent() {
   const handleStartConsultation = (patientId: string) => {
     dialogRef.current?.close();
     setPatientSearchQuery("");
-    router.push(`/consultation?patientId=${patientId}`);
+    router.push(`/consultas/nueva?patientId=${patientId}`);
   };
 
   const getConsultationsByType = (type: string) => {
@@ -268,7 +268,7 @@ export default function DashboardContent() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <Link href="/consultation" className="group">
+          <button onClick={() => dialogRef.current?.showModal()} className="group text-left w-full">
             <div className="bg-white rounded-xl border border-slate-200 p-5 cursor-pointer transition-all duration-150 hover:border-slate-300 hover:shadow-md">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -283,7 +283,7 @@ export default function DashboardContent() {
                 <ChevronRight className="h-5 w-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
-          </Link>
+          </button>
           <Link href="/historias" className="group">
             <div className="bg-white rounded-xl border border-slate-200 p-5 cursor-pointer transition-all duration-150 hover:border-slate-300 hover:shadow-md">
               <div className="flex items-center justify-between">
@@ -345,7 +345,7 @@ export default function DashboardContent() {
               <div className="space-y-3">
                 {patients.slice(0, 6).map((patient) => (
                   <div key={patient.id} className="flex items-center justify-between p-4 rounded-xl transition-all duration-150 group hover:bg-slate-50 border border-transparent hover:border-slate-200">
-                    <Link href={`/consultation?patientId=${patient.id}`} className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer">
+                    <Link href={`/pacientes/${patient.id}`} className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer">
                       <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
                         {patient.firstName.charAt(0)}{patient.lastName.charAt(0)}
                       </div>

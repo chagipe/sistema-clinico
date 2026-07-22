@@ -1,9 +1,9 @@
-import { Suspense } from "react";
-import PacientesContent from "./pacientes-content";
+"use client";
 
-export const dynamic = "force-dynamic";
+import React, { Suspense } from "react";
+import ConsultationForm from "@/app/consultation/consultation-form";
 
-export default function PacientesPage() {
+export default function NuevaConsultaPage() {
   return (
     <Suspense
       fallback={
@@ -12,7 +12,7 @@ export default function PacientesPage() {
         </div>
       }
     >
-      <PacientesContent />
+      <ConsultationForm />
     </Suspense>
   );
 }

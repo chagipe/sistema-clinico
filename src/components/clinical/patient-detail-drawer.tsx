@@ -149,7 +149,7 @@ export function PatientDetailDrawer({ patient, open, onClose }: PatientDetailDra
 
           {/* Quick Actions */}
           <div className="px-6 pb-4 flex items-center gap-2">
-            <Link href={`/consultation?patientId=${patient.id}`}>
+            <Link href={`/consultas/nueva?patientId=${patient.id}`}>
               <button className="clay-button-primary px-3 py-2 text-xs font-semibold flex items-center gap-1.5">
                 <Plus className="h-3.5 w-3.5" />
                 Nueva Consulta

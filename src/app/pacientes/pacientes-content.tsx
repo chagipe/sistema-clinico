@@ -1,18 +1,10 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { TopBar } from "@/components/layout/top-bar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { PatientDetailDrawer } from "@/components/clinical/patient-detail-drawer";
-import { EvaPainScale } from "@/components/clinical/eva-pain-scale";
 import {
   Users,
   Plus,
@@ -23,7 +15,6 @@ import {
   X,
   Trash2,
   Syringe,
-  ClipboardCheck,
   Clock,
 } from "lucide-react";
 import { calculateAge, cn } from "@/lib/utils";
@@ -56,14 +47,14 @@ interface Patient {
 }
 
 export default function PacientesContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get("search") ?? "");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const deleteDialogRef = useRef<HTMLDialogElement>(null);
   const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null);
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [newPatient, setNewPatient] = useState({
     dni: "",
     firstName: "",
@@ -71,9 +62,20 @@ export default function PacientesContent() {
     birthDate: "",
     gender: "",
     phone: "",
+    occupation: "",
+    maritalStatus: "",
+    address: "",
+    personalAllergies: "",
   });
 
   useEffect(() => { fetchPatients(); }, []);
+  
+  useEffect(() => {
+    const search = searchParams.get("search");
+    if (search) {
+      setSearchQuery(search);
+    }
+  }, [searchParams]);
 
   const fetchPatients = async () => {
     try {
@@ -99,7 +101,7 @@ export default function PacientesContent() {
       const data = await response.json();
       if (response.ok) {
         dialogRef.current?.close();
-        setNewPatient({ dni: "", firstName: "", lastName: "", birthDate: "", gender: "", phone: "" });
+        setNewPatient({ dni: "", firstName: "", lastName: "", birthDate: "", gender: "", phone: "", occupation: "", maritalStatus: "", address: "", personalAllergies: "" });
         fetchPatients();
       } else {
         alert("Error: " + (data.error || JSON.stringify(data)));
@@ -138,14 +140,7 @@ export default function PacientesContent() {
   });
 
   const handleOpenPatient = (patient: Patient) => {
-    setSelectedPatient(patient);
-    setDrawerOpen(true);
-  };
-
-  const handleCloseDrawer = () => {
-    setDrawerOpen(false);
-    setSelectedPatient(null);
-    fetchPatients();
+    router.push(`/pacientes/${patient.id}`);
   };
 
   const getPatientStatus = (patient: Patient) => {
@@ -206,15 +201,16 @@ export default function PacientesContent() {
               </div>
               <div className="space-y-2">
                 <Label className="text-sm font-medium text-slate-700">Genero</Label>
-                <Select onValueChange={(value) => setNewPatient({ ...newPatient, gender: value })}>
-                  <SelectTrigger className="clay-input h-11 text-slate-900">
-                    <SelectValue placeholder="Seleccionar" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border border-slate-200 shadow-lg">
-                    <SelectItem value="Masculino">Masculino</SelectItem>
-                    <SelectItem value="Femenino">Femenino</SelectItem>
-                  </SelectContent>
-                </Select>
+                <select
+                  value={newPatient.gender}
+                  onChange={(e) => setNewPatient({ ...newPatient, gender: e.target.value })}
+                  className="clay-input h-11 w-full text-sm text-slate-900 px-3 rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10"
+                  required
+                >
+                  <option value="" disabled>Seleccionar</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
+                </select>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -259,6 +255,50 @@ export default function PacientesContent() {
                   className="clay-input h-11 text-slate-900 placeholder:text-slate-400"
                 />
               </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-slate-700">Ocupacion</Label>
+                <Input
+                  value={newPatient.occupation}
+                  onChange={(e) => setNewPatient({ ...newPatient, occupation: e.target.value })}
+                  placeholder="Ej: Ingeniero"
+                  className="clay-input h-11 text-slate-900 placeholder:text-slate-400"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-slate-700">Estado Civil</Label>
+                <select
+                  value={newPatient.maritalStatus}
+                  onChange={(e) => setNewPatient({ ...newPatient, maritalStatus: e.target.value })}
+                  className="clay-input h-11 w-full text-sm text-slate-900 px-3 rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10"
+                >
+                  <option value="">Seleccionar</option>
+                  <option value="Soltero">Soltero(a)</option>
+                  <option value="Casado">Casado(a)</option>
+                  <option value="Divorciado">Divorciado(a)</option>
+                  <option value="Viudo">Viudo(a)</option>
+                  <option value="Conviviente">Conviviente</option>
+                </select>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-slate-700">Direccion</Label>
+              <Input
+                value={newPatient.address}
+                onChange={(e) => setNewPatient({ ...newPatient, address: e.target.value })}
+                placeholder="Direccion completa"
+                className="clay-input h-11 text-slate-900 placeholder:text-slate-400"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-slate-700">Alergias Conocidas</Label>
+              <Input
+                value={newPatient.personalAllergies}
+                onChange={(e) => setNewPatient({ ...newPatient, personalAllergies: e.target.value })}
+                placeholder="Especificar alergias si las conoce"
+                className="clay-input h-11 text-slate-900 placeholder:text-slate-400"
+              />
             </div>
             <div className="flex justify-end gap-3 pt-2">
               <button type="button" className="clay-button px-4 py-2.5 text-sm font-medium text-slate-700" onClick={() => dialogRef.current?.close()}>
@@ -311,15 +351,6 @@ export default function PacientesContent() {
           </div>
         </div>
       </dialog>
-
-      {/* Patient Detail Drawer */}
-      {selectedPatient && (
-        <PatientDetailDrawer
-          patient={selectedPatient}
-          open={drawerOpen}
-          onClose={handleCloseDrawer}
-        />
-      )}
 
       <div className="flex-1 p-6 space-y-6 overflow-y-auto">
         {/* Search */}
