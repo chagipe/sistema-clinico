@@ -9,12 +9,14 @@ const consultationSchema = z.object({
   hasAccidentsOps: z.boolean().optional(),
   consultationReason: z.string().optional(),
   diseaseHistory: z.string().optional(),
+  antecedentes: z.string().optional(),
   allergies: z.string().optional(),
   physicalExam: z.string().optional(),
   labExamsRequested: z.string().optional(),
   treatmentDurationApprox: z.string().optional(),
   improvementEstimate: z.string().optional(),
   painScale: z.number().min(0).max(10).optional(),
+  destination: z.string().optional(),
   doctorComments: z.string().optional(),
   vitals: z
     .object({

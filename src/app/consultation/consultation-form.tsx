@@ -53,12 +53,14 @@ const consultationSchema = z.object({
   hasAccidentsOps: z.boolean(),
   consultationReason: z.string().optional(),
   diseaseHistory: z.string().optional(),
+  antecedentes: z.string().optional(),
   allergies: z.string().optional(),
   physicalExam: z.string().optional(),
   labExamsRequested: z.string().optional(),
   treatmentDurationApprox: z.string().optional(),
   improvementEstimate: z.string().optional(),
   painScale: z.number().min(0).max(10).optional(),
+  destination: z.string().optional(),
   doctorComments: z.string().optional(),
   vitals: z.object({
     bloodPressure: z.string().optional(),
@@ -300,11 +302,13 @@ export default function ConsultationForm() {
         ...data,
         consultationReason: data.consultationReason ?? "",
         diseaseHistory: data.diseaseHistory ?? "",
+        antecedentes: data.antecedentes ?? "",
         allergies: data.allergies ?? "",
         physicalExam: data.physicalExam ?? "",
         labExamsRequested: data.labExamsRequested ?? "",
         treatmentDurationApprox: data.treatmentDurationApprox ?? "",
         improvementEstimate: data.improvementEstimate ?? "",
+        destination: data.destination ?? "",
         doctorComments: data.doctorComments ?? "",
         diagnoses,
       };
@@ -612,7 +616,7 @@ export default function ConsultationForm() {
           </SectionPanel>
 
           {/* Section 2: Clinical Evaluation */}
-          <SectionPanel title="Evaluacion Clinica" subtitle="Motivo, historia y examen fisico" icon={FileText} iconBg="bg-cyan-500" badge="Eval">
+          <SectionPanel title="Evaluacion Clinica" subtitle="Motivo, historia, antecedentes y examen fisico" icon={FileText} iconBg="bg-cyan-500" badge="Eval">
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Motivo de Consulta</Label>
@@ -621,6 +625,10 @@ export default function ConsultationForm() {
               <div className="space-y-2">
                 <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Historia de la Enfermedad Actual</Label>
                 <Textarea placeholder="Describa la evolucion y sintomatologia..." className="clay-input min-h-[120px] text-slate-900 placeholder:text-slate-400 resize-none" {...form.register("diseaseHistory")} />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Antecedentes (APP / APF)</Label>
+                <Textarea placeholder="Antecedentes Personales Patologicos y Antecedentes Patologicos Familiares relevantes..." className="clay-input min-h-[100px] text-slate-900 placeholder:text-slate-400 resize-none" {...form.register("antecedentes")} />
               </div>
               <div className="space-y-2">
                 <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Examen Fisico / Exploracion</Label>
@@ -661,7 +669,7 @@ export default function ConsultationForm() {
           </SectionPanel>
 
           {/* Section 4: Treatment */}
-          <SectionPanel title="Tratamiento Alternativo" subtitle="Ozonoterapia, Plasma, Viscosuplementacion" icon={Syringe} iconBg="bg-violet-500" badge="Procedimientos">
+          <SectionPanel title="Tratamiento Recomendado (Procedimientos)" subtitle="Ozonoterapia, Plasma, Viscosuplementacion" icon={Syringe} iconBg="bg-violet-500" badge="Procedimientos">
             <TreatmentTable form={form} />
           </SectionPanel>
 
@@ -681,25 +689,40 @@ export default function ConsultationForm() {
           </SectionPanel>
 
           {/* Section 8: Exams & Prognosis */}
-          <SectionPanel title="Examenes y Pronostico" subtitle="Examenes requeridos y tiempo estimado" icon={Activity} iconBg="bg-teal-500">
+          <SectionPanel title="Exámenes, Pronóstico y Destino" subtitle="Examenes requeridos, tiempo estimado y destino" icon={Activity} iconBg="bg-teal-500">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Examenes Requeridos</Label>
-                <Textarea placeholder="Ej: Rayos X de rodilla, Resonancia Magnetica de columna lumbar..." className="clay-input min-h-[100px] text-slate-900 placeholder:text-slate-400 resize-none" {...form.register("labExamsRequested")} />
+                <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Examenes Requeridos / Laboratorio e Imaginologia</Label>
+                <Textarea placeholder="Ej: Rayos X de Columna Lumbar / Rodilla AP-FL, Resonancia Magnetica..." className="clay-input min-h-[100px] text-slate-900 placeholder:text-slate-400 resize-none" {...form.register("labExamsRequested")} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tiempo Aproximado de Tratamiento</Label>
-                  <Input placeholder="Ej: Aproximadamente 2 meses" {...form.register("treatmentDurationApprox")} className="clay-input h-11 text-slate-900 placeholder:text-slate-400" />
+                  <Input placeholder="Ej: 2 meses" {...form.register("treatmentDurationApprox")} className="clay-input h-11 text-slate-900 placeholder:text-slate-400" />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tiempo Estimado de Mejora</Label>
-                  <Input placeholder="Ej: A partir de 4ta semana entre 30% a 70%" {...form.register("improvementEstimate")} className="clay-input h-11 text-slate-900 placeholder:text-slate-400" />
+                  <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tiempo Estimado de Mejoria / Pronostico</Label>
+                  <Input placeholder="Ej: A partir de 4ta semana entre 30% a 60%" {...form.register("improvementEstimate")} className="clay-input h-11 text-slate-900 placeholder:text-slate-400" />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Comentarios del Doctor</Label>
-                <Textarea placeholder="Observaciones adicionales..." className="clay-input min-h-[100px] text-slate-900 placeholder:text-slate-400 resize-none" {...form.register("doctorComments")} />
+                <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Destino</Label>
+                <Select
+                  onValueChange={(value) => form.setValue("destination", value)}
+                  value={form.watch("destination") || ""}
+                >
+                  <SelectTrigger className="clay-input h-11 text-slate-900">
+                    <SelectValue placeholder="Seleccionar destino" />
+                  </SelectTrigger>
+                  <SelectContent className="clay-card border-0 z-[9999]">
+                    <SelectItem value="TRATAMIENTO">Tratamiento</SelectItem>
+                    <SelectItem value="RECONSULTA">Reconsulta</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Comentario de Evolucion</Label>
+                <Textarea placeholder="Observaciones adicionales del doctor (ej: Paciente en espera de Rayos X para reconsulta)..." className="clay-input min-h-[100px] text-slate-900 placeholder:text-slate-400 resize-none" {...form.register("doctorComments")} />
               </div>
             </div>
           </SectionPanel>

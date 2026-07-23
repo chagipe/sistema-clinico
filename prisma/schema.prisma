@@ -74,12 +74,14 @@ model Consultation {
   hasAccidentsOps          Boolean          @default(false) @map("has_accidents_ops")
   consultationReason       String?          @map("consultation_reason") @db.Text
   diseaseHistory           String?          @map("disease_history") @db.Text
+  antecedentes             String?          @db.Text
   allergies                String?          @db.Text
   physicalExam             String?          @map("physical_exam") @db.Text
   labExamsRequested        String?          @map("lab_exams_requested") @db.Text
   treatmentDurationApprox  String?          @map("treatment_duration_approx") @db.VarChar(200)
   improvementEstimate      String?          @map("improvement_estimate") @db.VarChar(200)
   painScale                Int?             @map("pain_scale")
+  destination              String?          @db.VarChar(50)
   doctorComments           String?          @map("doctor_comments") @db.Text
   createdAt                DateTime         @default(now()) @map("created_at")
 

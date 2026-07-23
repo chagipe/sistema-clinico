@@ -6,6 +6,24 @@ export interface Patient {
   birthDate: Date;
   gender: string;
   phone?: string | null;
+  occupation?: string | null;
+  maritalStatus?: string | null;
+  address?: string | null;
+  familyHistoryDiabetes?: boolean;
+  familyHistoryHypertension?: boolean;
+  familyHistoryCancer?: boolean;
+  familyHistoryHeartDisease?: boolean;
+  familyHistoryKidneyDisease?: boolean;
+  familyHistoryOther?: string | null;
+  personalAllergies?: string | null;
+  personalSurgeries?: string | null;
+  personalHospitalizations?: string | null;
+  personalTransfusions?: string | null;
+  personalTrauma?: string | null;
+  smoking?: boolean;
+  alcohol?: boolean;
+  bloodType?: string | null;
+  habits?: string | null;
   createdAt: Date;
 }
 
@@ -59,7 +77,12 @@ export interface RecommendationsChecklist {
   noAlcohol: boolean;
   noAvocado: boolean;
   noRedMeat: boolean;
-  useOrthopedicSupport: boolean;
+  cryotherapy: boolean;
+  thermotherapy: boolean;
+  stretchingExercises: boolean;
+  useFajaDorsoLumbar: boolean;
+  useRodillera: boolean;
+  useOrthopedicInsoles: boolean;
 }
 
 export interface Consultation {
@@ -71,11 +94,14 @@ export interface Consultation {
   hasAccidentsOps: boolean;
   consultationReason?: string | null;
   diseaseHistory?: string | null;
+  antecedentes?: string | null;
   allergies?: string | null;
   physicalExam?: string | null;
   labExamsRequested?: string | null;
   treatmentDurationApprox?: string | null;
   improvementEstimate?: string | null;
+  painScale?: number | null;
+  destination?: string | null;
   doctorComments?: string | null;
   createdAt: Date;
   patient: Patient;

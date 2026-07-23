@@ -23,29 +23,43 @@ const TREATMENT_OPTIONS = [
   { value: "Acupuntura", label: "Acupuntura" },
 ];
 
+const BODY_ZONE_OPTIONS = [
+  { value: "Columna Cervical", label: "Columna Cervical" },
+  { value: "Columna Lumbar", label: "Columna Lumbar" },
+  { value: "Rodilla Derecha", label: "Rodilla Derecha" },
+  { value: "Rodilla Izquierda", label: "Rodilla Izquierda" },
+  { value: "Ambas Rodillas", label: "Ambas Rodillas" },
+  { value: "Hombro Derecho", label: "Hombro Derecho" },
+  { value: "Hombro Izquierdo", label: "Hombro Izquierdo" },
+  { value: "Cadera / Otras articulaciones", label: "Cadera / Otras articulaciones" },
+  { value: "__custom__", label: "Otra (especificar)" },
+];
+
 const QUICK_TEMPLATES: Record<string, { zone: string; label: string }[]> = {
   "Ozonoterapia": [
-    { zone: "Rodilla Izquierda", label: "Rod. Izq." },
     { zone: "Rodilla Derecha", label: "Rod. Der." },
+    { zone: "Rodilla Izquierda", label: "Rod. Izq." },
+    { zone: "Ambas Rodillas", label: "Ambas Rod." },
     { zone: "Columna Lumbar", label: "Col. Lumbar" },
     { zone: "Columna Cervical", label: "Col. Cervical" },
-    { zone: "Cadera Izquierda", label: "Cadera Izq." },
-    { zone: "Cadera Derecha", label: "Cadera Der." },
-    { zone: "Hombro Izquierdo", label: "Hombro Izq." },
     { zone: "Hombro Derecho", label: "Hombro Der." },
+    { zone: "Hombro Izquierdo", label: "Hombro Izq." },
+    { zone: "Cadera / Otras articulaciones", label: "Cadera/Otras" },
   ],
   "Plasma Rico en Plaquetas (PRP)": [
-    { zone: "Rodilla Izquierda", label: "Rod. Izq." },
     { zone: "Rodilla Derecha", label: "Rod. Der." },
+    { zone: "Rodilla Izquierda", label: "Rod. Izq." },
+    { zone: "Ambas Rodillas", label: "Ambas Rod." },
     { zone: "Columna Lumbar", label: "Col. Lumbar" },
     { zone: "Columna Cervical", label: "Col. Cervical" },
-    { zone: "Cadera Izquierda", label: "Cadera Izq." },
-    { zone: "Cadera Derecha", label: "Cadera Der." },
-    { zone: "Facial / Estetico", label: "Facial" },
+    { zone: "Hombro Derecho", label: "Hombro Der." },
+    { zone: "Hombro Izquierdo", label: "Hombro Izq." },
+    { zone: "Cadera / Otras articulaciones", label: "Cadera/Otras" },
   ],
   "Viscosuplementacion": [
-    { zone: "Rodilla Izquierda", label: "Rod. Izq." },
     { zone: "Rodilla Derecha", label: "Rod. Der." },
+    { zone: "Rodilla Izquierda", label: "Rod. Izq." },
+    { zone: "Ambas Rodillas", label: "Ambas Rod." },
   ],
 };
 
@@ -148,35 +162,43 @@ export function TreatmentTable({ form }: TreatmentTableProps) {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Zona Corporal</Label>
-              <Select onValueChange={(value) => form.setValue(`alternativeTreatments.${index}.bodyZone`, value)} value={form.watch(`alternativeTreatments.${index}.bodyZone`) || ""}>
+              <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Zona Especifica</Label>
+              <Select
+                onValueChange={(value) => {
+                  if (value === "__custom__") {
+                    form.setValue(`alternativeTreatments.${index}.bodyZone`, "");
+                  } else {
+                    form.setValue(`alternativeTreatments.${index}.bodyZone`, value);
+                  }
+                }}
+                value={
+                  BODY_ZONE_OPTIONS.some(o => o.value === form.watch(`alternativeTreatments.${index}.bodyZone`))
+                    ? form.watch(`alternativeTreatments.${index}.bodyZone`)
+                    : "__custom__"
+                }
+              >
                 <SelectTrigger className="clay-input h-10 text-slate-900">
                   <SelectValue placeholder="Seleccionar zona" />
                 </SelectTrigger>
                 <SelectContent className="clay-card border-0">
-                  {getAvailableQuickTemplates(index).length > 0
-                    ? getAvailableQuickTemplates(index).map((z) => <SelectItem key={z.zone} value={z.zone}>{z.label} - {z.zone}</SelectItem>)
-                    : [
-                        { value: "Rodilla Izquierda", label: "Rodilla Izquierda" },
-                        { value: "Rodilla Derecha", label: "Rodilla Derecha" },
-                        { value: "Columna Cervical", label: "Columna Cervical" },
-                        { value: "Columna Lumbar", label: "Columna Lumbar" },
-                        { value: "Columna Dorsal", label: "Columna Dorsal" },
-                        { value: "Hombro Izquierdo", label: "Hombro Izquierdo" },
-                        { value: "Hombro Derecho", label: "Hombro Derecho" },
-                        { value: "Codo Izquierdo", label: "Codo Izquierdo" },
-                        { value: "Codo Derecho", label: "Codo Derecho" },
-                        { value: "Tobillo Izquierdo", label: "Tobillo Izquierdo" },
-                        { value: "Tobillo Derecho", label: "Tobillo Derecho" },
-                        { value: "Muneca Izquierda", label: "Muneca Izquierda" },
-                        { value: "Muneca Derecha", label: "Muneca Derecha" },
-                        { value: "Cadera Izquierda", label: "Cadera Izquierda" },
-                        { value: "Cadera Derecha", label: "Cadera Derecha" },
-                        { value: "Facial / Estetico", label: "Facial / Estetico" },
-                      ].map((o) => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)
-                  }
+                  {BODY_ZONE_OPTIONS.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
+              {(!BODY_ZONE_OPTIONS.some(o => o.value === form.watch(`alternativeTreatments.${index}.bodyZone`)) ||
+                form.watch(`alternativeTreatments.${index}.bodyZone`) === "") && (
+                <Input
+                  placeholder="Especifique la zona..."
+                  className="clay-input h-10 text-slate-900 placeholder:text-slate-400"
+                  value={
+                    BODY_ZONE_OPTIONS.some(o => o.value === form.watch(`alternativeTreatments.${index}.bodyZone`))
+                      ? ""
+                      : form.watch(`alternativeTreatments.${index}.bodyZone`) || ""
+                  }
+                  onChange={(e) => form.setValue(`alternativeTreatments.${index}.bodyZone`, e.target.value)}
+                />
+              )}
             </div>
             <div className="space-y-1.5">
               <Label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Frecuencia</Label>
